@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projeto Solarium — NewSun Energy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#13234F; --navy-2:#1B3068; --navy-3:#264284;
+    --gold:#F2A516; --gold-soft:#F8C95C; --risk:#C0492F;
+    --paper:#F4F1E9; --paper-2:#FBFAF5;
+    --ink:#1A2340; --ink-mut:#5C6480;
+    --line:#D9D3C4; --line-navy:#2C407C;
+    --tx-navy:#EEF1FA; --tx-navy-mut:#A6B0D2;
+    --display:'Fraunces',Georgia,serif;
+    --body:'Inter',system-ui,-apple-system,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px}
+
+  .hero{min-height:92vh;background:var(--navy);color:var(--tx-navy);display:flex;align-items:center;position:relative;overflow:hidden}
+  .glow{position:absolute;top:-160px;right:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(242,165,22,.18),transparent 62%);pointer-events:none}
+  .glow2{position:absolute;bottom:-200px;left:-160px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(38,66,132,.55),transparent 64%);pointer-events:none}
+  .hero-in{position:relative;z-index:2;padding:60px 0}
+  .logo{width:92px;height:92px;border-radius:18px;border:1px solid rgba(248,201,92,.45);display:block;margin-bottom:34px}
+  .hero h1{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,66px);line-height:1.02;letter-spacing:-.02em;max-width:16ch}
+  .hero h1 em{font-style:italic;color:var(--gold-soft)}
+  .hero p{font-size:clamp(16px,2.1vw,20px);color:var(--tx-navy-mut);max-width:58ch;margin-top:26px;line-height:1.6}
+  .cta{display:inline-flex;align-items:center;gap:12px;margin-top:40px;background:var(--gold);color:#3A2602;font-family:var(--body);font-weight:500;font-size:17px;padding:15px 30px;border-radius:6px;border:none;cursor:pointer;transition:transform .15s,background .15s}
+  .cta:hover,.cta:focus-visible{background:var(--gold-soft);transform:translateY(-1px)}
+  .cta svg{width:18px;height:18px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+
+  .project{padding:0 0 70px}
+  .tabbar{position:sticky;top:0;z-index:30;background:rgba(244,241,233,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .tabbar-in{max-width:1000px;margin:0 auto;padding:0 26px;display:flex;gap:4px;flex-wrap:wrap}
+  .tab{appearance:none;background:none;border:none;font-family:var(--body);font-size:15px;color:var(--ink-mut);padding:18px 14px;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--gold);font-weight:500}
+  .subtabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid var(--line)}
+  .subtab{appearance:none;background:none;border:none;font-family:var(--body);font-size:14px;color:var(--ink-mut);padding:9px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+  .subtab:hover{color:var(--ink)}
+  .subtab.active{color:var(--ink);border-bottom-color:var(--gold);font-weight:500}
+  .panel{display:none;padding-top:48px}
+  .panel.active{display:block}
+
+  .lead{font-family:var(--display);font-weight:500;font-size:clamp(24px,3.4vw,34px);line-height:1.14;letter-spacing:-.01em;max-width:22ch;margin-bottom:8px}
+
+  .topic{padding:30px 0;border-top:1px solid var(--line)}
+  .topic:first-of-type{border-top:none;padding-top:6px}
+  .topic .k{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+  .topic h3{font-family:var(--display);font-weight:500;font-size:clamp(22px,3vw,30px);line-height:1.1;margin-bottom:12px}
+  .topic p{font-size:17px;color:var(--ink);max-width:66ch;line-height:1.62}
+  .topic p .hl{color:#9A6A09;font-weight:500}
+
+  .frentes{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px}
+  .frente{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:20px 22px;border-left:3px solid var(--navy-3)}
+  .frente.now{border-left-color:var(--gold)}
+  .frente h4{font-family:var(--display);font-weight:500;font-size:18px;margin-bottom:5px}
+  .frente span{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-mut)}
+  .frente p{font-size:14.5px;color:var(--ink-mut);margin-top:6px}
+  @media(max-width:680px){.frentes{grid-template-columns:1fr}}
+  .gains{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .gain{background:var(--navy);color:var(--tx-navy);font-size:14px;padding:9px 15px;border-radius:6px}
+
+  .x-intro{font-size:17px;color:var(--ink-mut);max-width:66ch;margin-bottom:26px}
+  .x-layout{display:grid;grid-template-columns:310px 1fr;gap:22px;align-items:start}
+  .x-list{display:flex;flex-direction:column;gap:7px}
+  .cat-label{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-3);margin:16px 0 4px;padding-left:2px}
+  .cat-label:first-child{margin-top:0}
+  .xcard{appearance:none;text-align:left;background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:13px 16px;cursor:pointer;transition:border-color .15s,background .15s;display:flex;align-items:center;gap:11px;font-family:var(--body)}
+  .xcard:hover{border-color:var(--navy-3)}
+  .xcard.active{border-color:var(--gold);background:#fff;border-width:1.5px}
+  .xcard .dot{width:9px;height:9px;border-radius:2px;background:var(--gold);flex:none}
+  .xcard .nm{font-size:15px;font-weight:500;color:var(--ink)}
+  .xcard .tg{font-size:12px;color:var(--ink-mut);margin-top:1px}
+  .x-detail{background:var(--navy);color:var(--tx-navy);border-radius:14px;padding:30px 32px;min-height:300px;position:sticky;top:78px}
+  .x-detail .dk{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .x-detail h3{font-family:var(--display);font-weight:500;font-size:26px;margin-bottom:8px;color:#fff}
+  .x-detail .lede{font-size:15px;color:var(--tx-navy-mut);margin-bottom:22px;line-height:1.55}
+  .x-detail .blbl{font-size:13px;color:var(--tx-navy-mut);font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;margin-bottom:13px}
+  .x-detail ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .x-detail li{display:flex;gap:11px;align-items:flex-start;font-size:15px;line-height:1.45}
+  .x-detail li svg{width:17px;height:17px;flex:none;margin-top:2px;color:var(--gold-soft)}
+  .fields{display:flex;flex-wrap:wrap;gap:7px}
+  .field{font-family:var(--mono);font-size:12.5px;color:var(--tx-navy);background:var(--navy-3);border-radius:4px;padding:5px 9px}
+  .field.pk{background:#8A5A06;color:#FCE6B4}
+  @media(max-width:680px){.x-layout{grid-template-columns:1fr}.x-detail{position:static}}
+
+  .tk-note{font-size:15px;color:var(--ink-mut);max-width:66ch;margin-bottom:26px;border-left:3px solid var(--gold);padding-left:16px}
+  .tk-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .tk{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:22px 24px}
+  .tk h4{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-3);margin-bottom:13px}
+  .tk ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .tk li{font-size:14px;color:var(--ink);line-height:1.5;padding-left:15px;position:relative}
+  .tk li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:1px;background:var(--gold)}
+  .tk li b{font-weight:500}
+  .tk.full{grid-column:1/-1}
+  .tk-table{width:100%;border-collapse:collapse;font-size:14px}
+  .tk-table td{padding:9px 8px;border-top:1px solid var(--line);color:var(--ink)}
+  .tk-table td:last-child{font-family:var(--mono);color:var(--ink-mut);text-align:right;white-space:nowrap}
+  .tk-table tr:first-child td{border-top:none}
+  @media(max-width:680px){.tk-grid{grid-template-columns:1fr}}
+
+  .doc-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  .dl-btn{display:inline-flex;align-items:center;gap:9px;background:var(--gold);color:#3A2602;font-family:var(--body);font-weight:500;font-size:15px;padding:12px 22px;border-radius:6px;border:none;cursor:pointer;transition:background .15s,transform .15s}
+  .dl-btn:hover,.dl-btn:focus-visible{background:var(--gold-soft);transform:translateY(-1px)}
+  .dl-btn svg{width:17px;height:17px}
+  .doc-render{font-size:15px;color:var(--ink);line-height:1.65;max-width:780px}
+  .doc-render h1{font-family:var(--display);font-weight:500;font-size:30px;margin:6px 0 14px}
+  .doc-render h2{font-family:var(--display);font-weight:500;font-size:23px;margin:32px 0 10px;padding-top:18px;border-top:1px solid var(--line)}
+  .doc-render h3{font-weight:500;font-size:18px;margin:20px 0 8px}
+  .doc-render h4{font-weight:500;font-size:15px;margin:16px 0 6px;color:var(--navy-3)}
+  .doc-render p{margin:10px 0}
+  .doc-render ul,.doc-render ol{margin:10px 0 10px 22px}
+  .doc-render li{margin:4px 0}
+  .doc-render blockquote{border-left:3px solid var(--gold);background:var(--paper-2);margin:14px 0;padding:12px 16px;color:var(--ink)}
+  .doc-render blockquote p{margin:0}
+  .doc-render table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13px}
+  .doc-render th,.doc-render td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  .doc-render th{background:var(--paper-2);font-weight:500}
+  .doc-render code{font-family:var(--mono);font-size:12.5px;background:var(--paper-2);padding:1px 5px;border-radius:3px}
+  .doc-render hr{border:none;border-top:1px solid var(--line);margin:22px 0}
+
+  .map-stats{display:flex;flex-wrap:wrap;gap:12px;margin:4px 0 26px}
+  .map-stat{background:var(--navy);color:var(--tx-navy);border-radius:12px;padding:16px 20px;flex:1;min-width:140px}
+  .map-stat .v{font-family:var(--mono);font-weight:500;font-size:26px;color:var(--gold-soft)}
+  .map-stat .l{font-size:13px;color:var(--tx-navy-mut);margin-top:3px}
+  .map-grid{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start}
+  .map-canvas{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:10px}
+  .map-svg{display:block}
+  .mline{stroke:var(--line-navy);stroke-width:1.4;transition:stroke .15s,stroke-width .15s}
+  .mline.on{stroke:var(--gold);stroke-width:2.6}
+  .map-node{cursor:pointer}
+  .mnode-rect{fill:#fff;stroke:var(--navy-3);stroke-width:1;transition:stroke .15s,stroke-width .15s,fill .15s}
+  .map-node.sel .mnode-rect{stroke:var(--gold);stroke-width:2;fill:#FFF8EA}
+  .mnode-t{fill:var(--ink);font-family:var(--body);font-weight:500;font-size:14px}
+  .mnode-s{fill:var(--ink-mut);font-family:var(--mono);font-size:11px}
+  .mcenter-rect{fill:var(--gold);stroke:none}
+  .map-center.sel .mcenter-rect{stroke:#9A6A09;stroke-width:2}
+  .mcenter-t{fill:#3A2602;font-family:var(--display);font-weight:500;font-size:19px}
+  .mcenter-s{fill:#6A4A08;font-family:var(--mono);font-size:11px}
+  .flbl{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;margin:18px 0 9px}
+  .flbl.env{color:var(--gold)} .flbl.rec{color:var(--gold-soft)}
+  .flist{list-style:none;display:flex;flex-direction:column;gap:7px}
+  .flist li{font-size:14px;line-height:1.42;padding-left:14px;position:relative;color:var(--tx-navy)}
+  .flist li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:1px;background:var(--gold-soft)}
+  @media(max-width:760px){.map-grid{grid-template-columns:1fr}}
+
+  .project.collapsed{display:none}
+  .loss-block{margin-top:26px}
+  .loss-block .lh{font-family:var(--display);font-weight:500;font-size:22px;margin-bottom:4px}
+  .loss-block .lsub{font-size:14px;color:var(--ink-mut);margin-bottom:16px}
+  .loss-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .loss{background:#fff;border:1px solid var(--line);border-left:3px solid var(--risk);border-radius:12px;padding:18px 20px}
+  .loss .big{font-family:var(--mono);font-weight:500;font-size:18px;color:var(--risk);line-height:1.25}
+  .loss .prob{font-size:14px;color:var(--ink);font-weight:500;margin:5px 0 9px}
+  .loss .fix{font-size:13.5px;color:var(--ink-mut);line-height:1.45}
+  .loss .fix b{color:#1C7A52;font-weight:500}
+  .gain-band{background:var(--navy);border-radius:16px;padding:28px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px 24px;margin-top:6px}
+  .gain-card{display:flex;gap:12px;align-items:flex-start}
+  .gain-card svg{width:22px;height:22px;color:var(--gold);flex:none;margin-top:2px}
+  .gain-card b{display:block;color:#fff;font-size:16px;font-weight:500}
+  .gain-card span{display:block;color:var(--tx-navy-mut);font-size:13.5px;margin-top:3px;line-height:1.45}
+  @media(max-width:680px){.loss-grid{grid-template-columns:1fr}.gain-band{grid-template-columns:1fr}}
+
+  .steps{display:flex;flex-direction:column;gap:10px}
+  .step{display:flex;align-items:center;gap:16px;background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+  .step-n{font-family:var(--mono);font-size:13px;color:var(--navy-3);font-weight:500;width:24px;flex:none}
+  .step-body{flex:1;min-width:0}
+  .step-nome{font-size:15px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .step-desc{font-size:13px;color:var(--ink-mut);margin-top:2px;line-height:1.45}
+  .risk-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--risk);background:rgba(192,73,47,.10);padding:3px 8px;border-radius:4px;white-space:nowrap}
+  .status{appearance:none;border:none;cursor:pointer;font-family:var(--mono);font-size:11.5px;padding:7px 13px;border-radius:20px;white-space:nowrap;flex:none;font-weight:500;transition:background .15s}
+  .st-aguardando{background:#E6E0CF;color:#6A5B2E}
+  .st-aprovado{background:#D6E0F0;color:#274A84}
+  .st-construcao{background:#F8E2B0;color:#8A5A06}
+  .st-teste{background:#CDE6E9;color:#236A76}
+  .st-finalizado{background:#CDE9D8;color:#1C6A46}
+  @media(max-width:680px){.step{flex-wrap:wrap;gap:8px}.step-body{order:2;flex-basis:100%}.status{order:3}}
+
+  .plano-summary{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:20px;display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+  .ps-progress{min-width:180px;flex:1}
+  .ps-pctline{display:flex;align-items:baseline;gap:8px}
+  .ps-pct{font-family:var(--mono);font-weight:500;font-size:30px;color:#1C6A46}
+  .ps-lbl{font-size:13px;color:var(--ink-mut)}
+  .ps-bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:8px}
+  .ps-fill{height:100%;background:#3FA06E;border-radius:6px;transition:width .3s}
+  .ps-counts{display:flex;flex-wrap:wrap;gap:9px 18px}
+  .ps-count{font-size:13px;color:var(--ink);display:flex;align-items:center;gap:7px;white-space:nowrap}
+  .ps-count .d{width:10px;height:10px;border-radius:3px;flex:none}
+  .ps-count b{font-family:var(--mono);font-weight:500}
+  .d-aguardando{background:#C9BE9A}.d-aprovado{background:#7FA0D0}.d-construcao{background:#EBB94E}.d-teste{background:#5BA6B2}.d-finalizado{background:#3FA06E}
+  .pstep{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .pstep-head{width:100%;appearance:none;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:15px 18px;text-align:left;font-family:var(--body)}
+  .chev{color:var(--navy-3);font-size:11px;transition:transform .2s;flex:none}
+  .pstep.open .chev{transform:rotate(90deg)}
+  .pstep-nome{flex:1;font-size:15px;font-weight:500;color:var(--ink);display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+  .pstep-roll{display:flex;align-items:center;gap:9px;flex:none}
+  .roll-txt{font-family:var(--mono);font-size:12px;color:var(--ink-mut)}
+  .roll-bar{width:50px;height:6px;background:var(--line);border-radius:4px;overflow:hidden}
+  .roll-fill{height:100%;width:0;background:var(--gold);border-radius:4px;transition:width .3s}
+  .pstep-sub{display:none;flex-direction:column;border-top:1px solid var(--line);background:#fff}
+  .pstep.open .pstep-sub{display:flex}
+  .substep{display:flex;align-items:center;gap:14px;padding:12px 18px 12px 44px;border-top:1px solid var(--paper)}
+  .substep:first-child{border-top:none}
+  .substep-nome{flex:1;font-size:14px;color:var(--ink)}
+  @media(max-width:680px){.substep{flex-wrap:wrap;padding-left:24px}.pstep-roll{display:none}}
+
+  footer{background:var(--navy);color:var(--tx-navy-mut);padding:34px 0;font-size:13px}
+  footer b{color:var(--tx-navy);font-weight:500}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cta,.dl-btn{transition:none}}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="glow"></div><div class="glow2"></div>
+  <div class="wrap hero-in">
+    <img class="logo" src="data:image/jpeg;base64,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" alt="NewSun Energy Group">
+    <p class="eyebrow">NewSun Energy Group</p>
+    <h1>Toda energia precisa de uma <em>direção</em>.</h1>
+    <p>O Projeto Solarium é a bússola da NewSun: a base de informação única e confiável que organiza a casa hoje, para crescermos com segurança amanhã. Antes do nitro, o chassi.</p>
+    <button class="cta" type="button" onclick="openProject()">Projeto Solarium
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="project" id="projeto">
+  <div class="tabbar">
+    <div class="tabbar-in">
+      <button class="tab active" onclick="showTab('proj',this)">O projeto</button>
+      <button class="tab" onclick="showTab('mapa',this)">Mapa de comunicação</button>
+      <button class="tab" onclick="showTab('tabelas',this)">As tabelas</button>
+      <button class="tab" onclick="showTab('tecnico',this)">Informações técnicas</button>
+      <button class="tab" onclick="showTab('estrutura',this)">Estrutura técnica</button>
+      <button class="tab" onclick="showTab('plano',this)">Plano de execução</button>
+      <button class="tab" onclick="showTab('doc',this)">Documento completo</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <section class="panel active" id="panel-proj">
+      <p class="lead">Organizar a casa antes de acelerar.</p>
+      <div class="topic"><div class="k">O desafio</div><h3>Hoje, decidimos no escuro</h3>
+        <p>A NewSun cresceu rápido e a operação ficou apoiada em planilhas espalhadas. Cada área tem os seus números, eles não batem entre si, e a empresa depende de terceiros para enxergar a própria receita: de <span class="hl">R$ 34,6 milhões</span> reconhecidos, a operação concilia apenas <span class="hl">R$ 3 milhões</span>. Não dá para acelerar uma operação que não consegue se ver.</p></div>
+      <div class="topic"><div class="k">A virada</div><h3>Uma só verdade para a empresa inteira</h3>
+        <p>Vamos construir uma base de informação <span class="hl">única e confiável</span> — o Solarium — e adotar um sistema financeiro robusto para a retaguarda. Com a base pronta, a tecnologia avançada entra com segurança, em vez de acelerar o caos.</p></div>
+      <div class="topic"><div class="k">Por que agora</div><h3>O custo de esperar tem prazo</h3>
+        <p>A partir de <span class="hl">agosto</span>, todas as notas precisam ser emitidas dentro das novas regras fiscais — e hoje isso é feito à mão, uma a uma. Há <span class="hl">R$ 1,4 milhão</span> parado em cobranças vencidas e contas que deixam de ser pagas por falta de organização do caixa. Cada mês de espera custa caro e aumenta o risco.</p>
+        <div class="loss-block">
+          <div class="lh">O que deixamos de perder</div>
+          <div class="lsub">O projeto não traz só ganho — ele estanca a perda. Cada problema de hoje tem um custo.</div>
+          <div class="loss-grid">
+            <div class="loss"><div class="big">R$ 1,4 milhão</div><div class="prob">parado em cobranças vencidas</div><div class="fix">→ com o Solarium: <b>régua de cobrança</b> que recupera e estanca</div></div>
+            <div class="loss"><div class="big">Multa + faturamento parado</div><div class="prob">sem emissão de nota fiscal em agosto</div><div class="fix">→ com o Solarium: <b>emissão automática</b> no prazo</div></div>
+            <div class="loss"><div class="big">Clientes que cancelam</div><div class="prob">dupla cobrança: pagam para não serem cortados</div><div class="fix">→ com o Solarium: <b>liquidação programada</b> e visibilidade</div></div>
+            <div class="loss"><div class="big">Receita invisível</div><div class="prob">depender do contador para saber o próprio número</div><div class="fix">→ com o Solarium: <b>conciliação interna</b> automática</div></div>
+            <div class="loss"><div class="big">R$ 70,9 milhões</div><div class="prob">a pagar no controle manual (planilha e WhatsApp)</div><div class="fix">→ com o Solarium: <b>automação</b> e rastreio</div></div>
+            <div class="loss"><div class="big">35 de 90 clientes</div><div class="prob">sem boleto emitido — receita que escapa</div><div class="fix">→ com o Solarium: <b>cadastro e cobrança</b> completos</div></div>
+            <div class="loss"><div class="big">Margem irreal de ~98%</div><div class="prob">custo operacional lançado como despesa administrativa: R$ 733 mil de custo contra R$ 10,65 mi em administrativas — distorce decisões e o cálculo de impostos</div><div class="fix">→ com o Solarium: <b>custo no lugar certo</b>, margem real e imposto correto</div></div>
+            <div class="loss"><div class="big">~50 notas/mês</div><div class="prob">sem Manifestação do Destinatário na SEFAZ — risco de autuação</div><div class="fix">→ com o Solarium: <b>manifestação automática</b> e validação fiscal</div></div>
+          </div>
+        </div></div>
+      <div class="topic"><div class="k">Como vamos fazer</div><h3>Quatro frentes, em paralelo</h3>
+        <div class="frentes">
+          <div class="frente now"><h4>Organizar os dados</h4><span>começa já · custo zero</span><p>Construir a base única de informação com o que já temos internamente.</p></div>
+          <div class="frente"><h4>Adotar o sistema financeiro</h4><span>em paralelo · na hora certa</span><p>Escolher e implantar o sistema de retaguarda, sem comprometer o caixa antes da hora.</p></div>
+          <div class="frente"><h4>Alinhar o comercial</h4><span>em paralelo</span><p>Conectar vendas, parceiros e atendimento à base única.</p></div>
+          <div class="frente now"><h4>Cuidar das pessoas</h4><span>contínuo</span><p>Treinar as equipes e simplificar o dia a dia para que confiem na nova informação.</p></div>
+        </div></div>
+      <div class="topic"><div class="k">O caminho</div><h3>Avançamos por decisões, não por promessas</h3>
+        <p>Cada etapa tem um ponto de decisão claro: aprovar a base, validar o sistema financeiro, desligar as planilhas, contratar o sistema e, por fim, entregar os painéis para a diretoria. Uma etapa só libera a próxima quando entrega o que foi combinado.</p></div>
+      <div class="topic"><div class="k">O que ganhamos</div><h3>Crescer de verdade, sobre uma base sólida</h3>
+        <div class="gain-band">
+          <div class="gain-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><div><b>Uma só verdade</b><span>os mesmos números em toda a empresa</span></div></div>
+          <div class="gain-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><div><b>Cobrança em dia</b><span>recupera caixa e reduz a inadimplência</span></div></div>
+          <div class="gain-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><div><b>Conformidade fiscal</b><span>nota no prazo, sem multa nem susto</span></div></div>
+          <div class="gain-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><div><b>Decisões com dados reais</b><span>fim do achismo e dos números que não batem</span></div></div>
+          <div class="gain-card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg><div><b>Pronto para escalar</b><span>uma base que aguenta o crescimento</span></div></div>
+        </div></div>
+    </section>
+
+    <section class="panel" id="panel-tabelas">
+      <p class="lead">As tabelas que vamos criar.</p>
+      <p class="x-intro">Cada tabela é uma peça da base única. Clique em uma para ver os processos e documentos que vamos construir com ela.</p>
+      <div class="x-layout"><div class="x-list" id="tbl-list"></div><div class="x-detail" id="tbl-detail"></div></div>
+    </section>
+
+    <section class="panel" id="panel-tecnico">
+      <p class="lead">Informações técnicas.</p>
+      <p class="tk-note">Esta aba concentra os termos e detalhes de engenharia. A apresentação do projeto nas outras abas é livre de jargão de propósito — o detalhe técnico vive aqui.</p>
+      <div class="tk-grid">
+        <div class="tk"><h4>Arquitetura (papéis dos sistemas)</h4><ul>
+          <li><b>Solarium</b> — Master Data Management (MDM) e golden record; autoridade de identidade</li>
+          <li><b>NetSuite OneWorld</b> — system of record financeiro (AP/AR, consolidação, intercompany)</li>
+          <li><b>Bitrix24</b> — system of engagement comercial (CRM, funil, parceiros)</li>
+          <li><b>Energy Club</b> — front-end do cliente e cofrinho de energia</li></ul></div>
+        <div class="tk"><h4>APIs a desenvolver e conectar</h4><ul>
+          <li><b>Coleta de boletos</b> — status de liquidação para conciliação e cobrança</li>
+          <li><b>Coleta de faturas da concessionária</b> — consumo e impostos (RPA/integração)</li>
+          <li><b>Bureaus de crédito</b> — análise de risco na entrada</li>
+          <li><b>SEFAZ</b> — emissão de NF e Manifestação do Destinatário</li>
+          <li><b>Bancária (CNAB/Pix)</b> — boleto, retorno bancário e split payment</li>
+          <li><b>Bitrix24 e ERP</b> — sincronização de lead, contrato e eventos financeiros</li></ul></div>
+        <div class="tk"><h4>Compliance (travas algorítmicas)</h4><ul>
+          <li><b>Lei 14.300/2022:</b> custo de disponibilidade 30/50/100 kWh; Fio B por GD I/II/III</li>
+          <li><b>Reforma (IVA Dual):</b> princípio do destino por UC; casamento boleto-NF; split payment</li>
+          <li><b>SOX:</b> imutabilidade contratual e logs de auditoria</li>
+          <li><b>LGPD:</b> hash irreversível SHA-256 após churn</li></ul></div>
+        <div class="tk"><h4>Integração e automação</h4><ul>
+          <li>Barramento de mensageria <b>Kafka/RabbitMQ</b> com retry e dead-letter queue</li>
+          <li>APIs e webhooks entre Solarium, ERP e Bitrix24</li>
+          <li><b>RPA</b> das concessionárias com fallback de faturamento por média &gt; 48h</li>
+          <li>Contingência SEFAZ (EPEC/RPS offline)</li></ul></div>
+        <div class="tk full"><h4>Stack tecnológico</h4><table class="tk-table">
+          <tr><td>Solarium — motor de cálculo e MDM</td><td>40%</td></tr>
+          <tr><td>NetSuite OneWorld + motor fiscal</td><td>25%</td></tr>
+          <tr><td>Bitrix24 — CRM e relacionamento</td><td>15%</td></tr>
+          <tr><td>RPA e integrações</td><td>10%</td></tr>
+          <tr><td>Barramento, GED e BI</td><td>10%</td></tr></table></div>
+        <div class="tk full"><h4>Balanced Scorecard — 4 perspectivas</h4><ul>
+          <li><b>Financeira:</b> inadimplência por safra, split payment monitor, previsão de caixa</li>
+          <li><b>Processos:</b> geração × consumo, sucesso diário da ingestão RPA</li>
+          <li><b>Clientes:</b> churn por causa raiz, SLA × dias de faturamento</li>
+          <li><b>Aprendizado:</b> LTV de partners, onboarding de usinas</li></ul></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-estrutura">
+      <p class="lead">Estrutura técnica.</p>
+      <p class="x-intro">Cada item é um desenvolvimento que vamos construir. Escolha uma categoria e clique para ver os campos a desenvolver e por que ele importa.</p>
+      <div class="subtabs">
+        <button class="subtab active" onclick="estCat('Banco de dados',this)">Banco de dados</button>
+        <button class="subtab" onclick="estCat('APIs',this)">APIs</button>
+        <button class="subtab" onclick="estCat('Motores e automações',this)">Motores e automações</button>
+      </div>
+      <div class="x-layout"><div class="x-list" id="est-list"></div><div class="x-detail" id="est-detail"></div></div>
+    </section>
+
+    <section class="panel" id="panel-mapa">
+      <p class="lead">Quanto ganhamos em comunicação.</p>
+      <p class="x-intro">Hoje cada área fala por planilha e WhatsApp — e os números não batem. Com o Solarium no centro, os sistemas passam a conversar automaticamente. Clique em um sistema para ver o que ele envia e o que recebe.</p>
+      <div class="map-stats">
+        <div class="map-stat"><div class="v">7</div><div class="l">sistemas conectados</div></div>
+        <div class="map-stat"><div class="v">+14</div><div class="l">fluxos automáticos de dados</div></div>
+        <div class="map-stat"><div class="v">1</div><div class="l">só fonte da verdade</div></div>
+        <div class="map-stat"><div class="v">0</div><div class="l">planilhas paralelas</div></div>
+      </div>
+      <div class="map-grid">
+        <div class="map-canvas">
+          <svg viewBox="0 0 680 500" width="100%" class="map-svg" role="img" aria-label="Mapa de comunicação dos sistemas em torno do Solarium">
+            <line id="ln0" class="mline" x1="340" y1="260" x2="340" y2="70"/>
+            <line id="ln1" class="mline" x1="340" y1="260" x2="489" y2="142"/>
+            <line id="ln2" class="mline" x1="340" y1="260" x2="525" y2="302"/>
+            <line id="ln3" class="mline" x1="340" y1="260" x2="422" y2="431"/>
+            <line id="ln4" class="mline" x1="340" y1="260" x2="258" y2="431"/>
+            <line id="ln5" class="mline" x1="340" y1="260" x2="155" y2="302"/>
+            <line id="ln6" class="mline" x1="340" y1="260" x2="192" y2="142"/>
+            <g class="map-node map-center" onclick="selMap(-1)">
+              <rect class="mcenter-rect" x="258" y="228" width="164" height="64" rx="14"/>
+              <text class="mcenter-t" x="340" y="254" text-anchor="middle" dominant-baseline="central">Solarium</text>
+              <text class="mcenter-s" x="340" y="275" text-anchor="middle" dominant-baseline="central">fonte única</text>
+            </g>
+            <g class="map-node" id="n0" onclick="selMap(0)"><rect class="mnode-rect" x="270" y="44" width="140" height="52" rx="10"/><text class="mnode-t" x="340" y="66" text-anchor="middle" dominant-baseline="central">Bitrix24</text><text class="mnode-s" x="340" y="83" text-anchor="middle" dominant-baseline="central">comercial</text></g>
+            <g class="map-node" id="n1" onclick="selMap(1)"><rect class="mnode-rect" x="419" y="116" width="140" height="52" rx="10"/><text class="mnode-t" x="489" y="138" text-anchor="middle" dominant-baseline="central">ERP NetSuite</text><text class="mnode-s" x="489" y="155" text-anchor="middle" dominant-baseline="central">financeiro</text></g>
+            <g class="map-node" id="n2" onclick="selMap(2)"><rect class="mnode-rect" x="455" y="276" width="140" height="52" rx="10"/><text class="mnode-t" x="525" y="298" text-anchor="middle" dominant-baseline="central">Banco</text><text class="mnode-s" x="525" y="315" text-anchor="middle" dominant-baseline="central">cobrança</text></g>
+            <g class="map-node" id="n3" onclick="selMap(3)"><rect class="mnode-rect" x="352" y="405" width="140" height="52" rx="10"/><text class="mnode-t" x="422" y="427" text-anchor="middle" dominant-baseline="central">SEFAZ</text><text class="mnode-s" x="422" y="444" text-anchor="middle" dominant-baseline="central">fiscal</text></g>
+            <g class="map-node" id="n4" onclick="selMap(4)"><rect class="mnode-rect" x="188" y="405" width="140" height="52" rx="10"/><text class="mnode-t" x="258" y="427" text-anchor="middle" dominant-baseline="central">Concessionárias</text><text class="mnode-s" x="258" y="444" text-anchor="middle" dominant-baseline="central">consumo</text></g>
+            <g class="map-node" id="n5" onclick="selMap(5)"><rect class="mnode-rect" x="85" y="276" width="140" height="52" rx="10"/><text class="mnode-t" x="155" y="298" text-anchor="middle" dominant-baseline="central">Energy Club</text><text class="mnode-s" x="155" y="315" text-anchor="middle" dominant-baseline="central">cliente</text></g>
+            <g class="map-node" id="n6" onclick="selMap(6)"><rect class="mnode-rect" x="122" y="116" width="140" height="52" rx="10"/><text class="mnode-t" x="192" y="138" text-anchor="middle" dominant-baseline="central">Bureau</text><text class="mnode-s" x="192" y="155" text-anchor="middle" dominant-baseline="central">crédito / risco</text></g>
+          </svg>
+        </div>
+        <div class="x-detail map-detail" id="map-detail"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-plano">
+      <p class="lead">Plano de execução.</p>
+      <p class="x-intro">Acompanhamento do projeto: os passos em ordem cronológica, cada um com subtarefas. Clique em um passo para abrir as subtarefas e no status para avançar (Aguardando aprovação → Aprovado → Em construção → Em teste → Finalizado).</p>
+      <div class="subtabs">
+        <button class="subtab active" onclick="planoCat('Estrutura TI',this)">Estrutura TI</button>
+        <button class="subtab" onclick="planoCat('Financeiro',this)">Financeiro</button>
+      </div>
+      <div class="plano-summary" id="plano-summary"></div>
+      <div class="steps" id="plano-list"></div>
+    </section>
+
+    <section class="panel" id="panel-doc">
+      <div class="doc-head">
+        <p class="lead" style="margin:0">Documento completo.</p>
+        <button class="dl-btn" type="button" onclick="downloadDoc()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          Baixar documento (.md)
+        </button>
+      </div>
+      <div class="doc-render" id="doc-render"></div>
+    </section>
+
+  </div>
+</main>
+
+<footer><div class="wrap">PMO da transformação: <b>Ueverton Xavier</b> · sponsor: <b>CFO e Controladoria</b> · NewSun Energy Group · 2026</div></footer>
+
+<script id="doc-md" type="text/plain"># ☀️ Projeto Solarium — Governança, Reconciliação e Escalabilidade
+
+> 📄 **Documento-mestre de transformação (C-Level).** Versão consolidada do Projeto Solarium, reestruturada em torno dos riscos de negócio, fiscais e tributários que hoje comprometem a operação. Dele deriva a página executiva de apresentação ao comitê.
+
+| Campo | Conteúdo |
+|---|---|
+| **Classificação** | Enterprise Architecture / Master Data Management (MDM) e Governança Financeira |
+| **Sponsor executivo** | CFO e Controladoria |
+| **PMO da transformação / liderança de processos** | Ueverton Xavier |
+| **Vigência regulatória** | Lei 14.300/2022 (GD) · Reforma Tributária (EC 132/2023, IVA Dual) |
+| **Metodologias** | EFQM · Balanced Scorecard (BSC) |
+| **Base de dados** | Balanço Patrimonial e DRE consolidados 31/12/2025 (contabilidade externa); base interna de boletos; **entrevistas com colaboradores internos** |
+| **Versão** | 2.1 — consolidada com defesa de riscos e dicionário de dados em nível de campo |
+
+---
+
+## 🧭 Sumário
+
+- 🚀 1. Painel de governança e diretrizes
+- 🏎️ 2. A tese: NewSun 2.0 e o paradoxo da Ferrari
+- ⚠️ 3. Riscos críticos de negócio, fiscais e tributários
+- 🔍 4. Diagnóstico de impacto e maturidade operacional
+- 💰 5. Business case: custo da inação × custo da fundação
+- 🏗️ 6. A solução: arquitetura composta
+- 🧩 7. O split do projeto: frentes e gates
+- 🗄️ 8. Governança de dados e MDM
+- 🔄 9. Gestão de mudança e adoção
+- 📊 10. KPIs, critérios de aceite e tela de acompanhamento
+- ⚖️ 11. Matriz de riscos de implantação
+- 💻 12. Seleção do ERP de mercado
+- 🛠️ 13. Camada técnica
+- 📈 14. Balanced Scorecard (4 perspectivas)
+- 🗓️ 15. Cronograma por ondas
+- 🎯 16. Escopo da consultoria
+- 📚 17. Glossário estratégico
+- 📎 18. Base, fontes e ressalvas
+
+---
+
+## 🚀 1. Painel de governança e diretrizes
+
+**Objetivo macro:** escalar a operação com segurança de caixa e compliance fiscal, construindo a fundação de dados que **elimina os riscos de negócio, fiscais e tributários** hoje presentes na operação.
+
+**Premissa de liderança:** a governança de dados antecede a automação cognitiva. Não se injeta potência sobre uma estrutura frágil.
+
+**Decisão central submetida ao comitê:** aprovar o **Gate 0** (este business case) e a **Frente A** (fundação de dados no Solarium, custo de licença ~R$ 0) de imediato. A contratação do ERP de mercado fica condicionada ao **Gate 3**, atrelada à disponibilidade de orçamento — sem comprometer caixa antes da hora.
+
+---
+
+## 🏎️ 2. A tese: NewSun 2.0 e o paradoxo da Ferrari
+
+A NewSun projeta sua virada operacional: ampliar capacidade energética, escalar a carteira e incubar novas frentes de negócio. Em termos de mercado, o objetivo é colocar na pista uma "Ferrari de Geração Distribuída".
+
+Nesse cenário, a Inteligência Artificial é o **nitro** — potência máxima para decolar na vanguarda do setor. Contudo, diante da maturidade atual dos processos, vale a premissa rígida: **hoje, a IA não é a solução; sobre uma estrutura de madeira, ela é o veneno.** Injetar IA sobre silos e planilhas sujas apenas industrializa o caos — processa notas inconsistentes em milissegundos, automatiza regras de faturamento erradas e gera relatórios falsos em velocidade recorde, a um custo de nuvem proibitivo.
+
+> 💡 O Projeto Solarium e o ERP não freiam a inovação. São a engenharia obrigatória para trocar a madeira pelo **chassi de aço escovado** da NewSun 2.0. Só com o chassi travado existe fundação para receber o nitro com segurança.
+
+**Validação de mercado (2025):** o estudo do MIT (Project NANDA, *The GenAI Divide: State of AI in Business 2025*) concluiu que **~95% dos projetos de IA nas empresas não geram retorno mensurável** — e a causa não é a tecnologia, é a falta de dados estruturados e de integração aos processos. Governança antes da automação não é cautela: é o que separa os 5% que extraem valor.
+
+---
+
+## ⚠️ 3. Riscos críticos de negócio, fiscais e tributários
+
+O projeto não é "eficiência operacional". É **gestão de riscos que já estão materializados** na operação — e um deles tem prazo.
+
+### 3.1. Risco fiscal imediato — emissão de notas (prazo de agosto)
+
+- **Hoje não há emissão fiscal automatizada.** A operação trabalha apenas com notas de débito, calculadas e emitidas **manualmente, uma a uma**.
+- **A partir de agosto, 100% das notas precisam ser emitidas conforme a Reforma Tributária** — e hoje não há como automatizar esse processo.
+- **Implicação:** este é o gatilho de prazo do projeto. Sem o casamento boleto-NF no Solarium e o motor fiscal no ERP, a empresa entra em não conformidade e/ou paralisa o faturamento. É o risco mais urgente da mesa.
+
+### 3.2. Distorção da estrutura de custos (margem irreal)
+
+- A receita bruta e o custo na DRE **não refletem o custo de pagar as contas de energia dos clientes** quando a fatura é transferida. Esses pagamentos entram como **despesas administrativas**, quando deveriam ser **despesas operacionais**.
+- **Efeito:** custos de apenas R$ 733 mil contra despesas administrativas de R$ 10,65 mi produzem uma **margem bruta aparente de ~98% que não é real**. Qualquer decisão baseada nessa margem está distorcida — inclusive a apuração de crédito/débito da Reforma.
+- **Atenção ao estado atual:** o modelo de pagar a conta do cliente ("Titularidade Mantida no Cliente") é uma **proposta**, não a prática atual. Hoje a titularidade é transferida 100%, mas **as contas não estão sendo pagas por falta de fluxo de caixa** — o que joga o custo para o cliente (dupla cobrança) e alimenta o churn (ver 4.2).
+
+### 3.3. Conciliação e reconhecimento sem validação interna
+
+- A conciliação é feita **apenas pela contabilidade externa**, que classifica cada conta pela própria percepção e **reconhece as notas pelo que tem disponível — não pelo que a NewSun de fato reconhece**.
+- A empresa **não reproduz o próprio número internamente**: depende do balancete de terceiros para saber a própria receita, margem e classificação. É a ausência de fonte única da verdade na forma mais cara — **cegueira de reconciliação**.
+
+### 3.4. O retrato financeiro (balanço 2025)
+
+| Indicador (31/12/2025) | Valor |
+|---|---|
+| Ativo total | **R$ 532,6 mi** |
+| Receita bruta (DRE) | R$ 37,5 mi |
+| Receita líquida / lucro bruto | R$ 34,6 mi |
+| Custos (DRE) — subdimensionado por má classificação | R$ 0,73 mi |
+| Despesas administrativas — absorvendo custo operacional | R$ 10,65 mi |
+| Lucro líquido do exercício | **R$ 21,1 mi** |
+| Receita diferida — contratos de longo prazo (passivo) | **R$ 386,3 mi** |
+| Contas a pagar | R$ 70,9 mi |
+| Adiantamentos a fornecedores | R$ 36,4 mi |
+| Duplicatas a receber (circulante) | R$ 9,7 mi |
+| Disponível (caixa, bancos, aplicações) | R$ 3,4 mi |
+| Passivo tributário (a recolher + parcelamentos) | ~R$ 6,1 mi |
+| Patrimônio líquido | R$ 37,4 mi |
+| Regime tributário | Lucro Presumido |
+| **Receita conciliável na operação (boletos internos)** | **R$ 3,0 mi** |
+
+> ⚠️ **Ressalva.** Os indicadores vêm das demonstrações de 31/12/2025 preparadas pela contabilidade externa e ainda não foram auditados nem reproduzidos internamente. Devem ser validados com a contabilidade e em auditoria independente antes de uso externo. A reconciliação operacional que o Solarium entrega é justamente o que torna esses números rastreáveis e confiáveis.
+
+---
+
+## 🔍 4. Diagnóstico de impacto e maturidade operacional
+
+| Pilar operacional | Cenário atual (dor mapeada) | Risco / impacto | Nível | Meta |
+|---|---|---|---|---|
+| Conformidade fiscal (NF) | Sem emissão automatizada; só notas de débito manuais; mandato de 100% das notas em agosto | Não conformidade e paralisação de faturamento | 1/5 | 5/5 |
+| Estrutura de custos | Custo operacional (conta do cliente) classificado como despesa administrativa | Margem irreal, decisão distorcida | 1/5 | 4/5 |
+| Conciliação contábil | Conciliação só pela contabilidade externa; operação concilia ~R$ 3 mi de R$ 34,6 mi | Cegueira de reconciliação | 1/5 | 4/5 |
+| Governança de dados | Planilhas paralelas com dados divergentes por área | Decisão sobre indicadores falsos | 1/5 | 4/5 |
+| Faturamento | 35 de 90 clientes da base sem boleto emitido | Vazamento de receita não quantificado | 1/5 | 4/5 |
+| Régua de cobrança | R$ 1,4 mi vencido, sem régua de acionamento | Inadimplência crescente, capital parado | 2/5 | 4/5 |
+| Eficiência fiscal (entrada) | ~50 notas/mês via Sieg sem Manifestação do Destinatário | Faturamento frio e autuação SEFAZ | 2/5 | 5/5 |
+| Backoffice financeiro | R$ 70,9 mi a pagar e R$ 36,4 mi adiantados sob controle manual | Perda de margem, erro e retrabalho | 2/5 | 4/5 |
+| Integração comercial | Titularidade transferida, mas contas não pagas por falta de caixa | Dupla cobrança e churn | 2/5 | 4/5 |
+
+### 4.1. Área financeira, contábil e fiscal
+
+- **Emissão fiscal manual e não escalável.** Sem cálculo nem emissão automatizada de NF; o mandato de agosto torna isso um cliff. *Solução: ordem de faturamento no Solarium + motor fiscal no ERP (casamento boleto-NF e split payment).*
+- **Custos operacionais classificados como administrativos.** O custo de pagar a conta do cliente distorce a margem. *Solução: centro de custos e classificação CAPEX/OPEX por usina, com a conta da concessionária registrada como custo operacional.*
+- **Conciliação e reconhecimento terceirizados.** A contabilidade externa classifica e reconhece pela própria percepção. *Solução: conciliação automatizada via CNAB e reconhecimento ancorado no dado operacional do Solarium.*
+- **Vulnerabilidade fiscal (Sieg).** Notas de fornecedores escrituradas sem Manifestação do Destinatário. *Solução: workflow que trava o Contas a Pagar até a "Ciência/Confirmação da Operação" na SEFAZ.*
+- **Inadimplência represada.** R$ 1,4 mi vencido sem régua. *Solução: régua de cobrança e gatilho de liquidez condicionando comissões ao status pago.*
+- **Ineficiência tributária.** Lucro Presumido com passivo expressivo, sem análise de migração. *Solução: motor fiscal IVA Dual gerando crédito × débito por usina.*
+
+### 4.2. Área comercial, marketing e operações (SAC)
+
+- **Contas da concessionária não pagas por falta de caixa.** Com a titularidade transferida, parte dos clientes arca com a conta para não ter o fornecimento cortado (dupla cobrança), o que evade a base. *Contingência futura: modelo "Titularidade Mantida no Cliente"; prioridade imediata: liquidação programada via CNAB e visibilidade de pendências no Solarium.*
+- **Sobrecarga do SAC e churn velado.** Mais de 500 chamados para ~60 clientes ativos, majoritariamente dúvidas de cobrança. *Solução: "Visão Dividida" e "Cofrinho de Energia" no Energy Club.*
+- **Erosão da base.** Base de 90 clientes, dos quais apenas 55 têm boleto emitido. Quantificar os 35 sem boleto é o primeiro quick win.
+- **Ausência de gestão à vista.** Metas restritas a comitês. *Solução: dashboards diários do BSC.*
+
+---
+
+## 💰 5. Business case: custo da inação × custo da fundação
+
+| Frente de risco | Evidência | Leitura |
+|---|---|---|
+| **Conformidade fiscal (NF)** | Sem emissão automatizada; mandato de 100% das notas em agosto | Não conformidade e risco de parar o faturamento — prazo curto |
+| Margem distorcida | Custo operacional lançado como despesa administrativa | Margem e crédito fiscal calculados sobre base errada |
+| Cegueira de reconciliação | R$ 34,6 mi reconhecidos × R$ 3 mi conciliados | Empresa não reproduz o próprio número |
+| Capital parado | R$ 1,4 mi vencido dentro de R$ 9,7 mi a receber, sem régua | Custo de carregamento e risco de perda |
+| Vazamento de faturamento | 35 de 90 clientes sem boleto (~39% da base) | Run-rate potencial ~R$ 1,5 mi/ano, **a quantificar na Frente A** |
+| Risco fiscal (entrada) | ~50 notas/mês sem manifestação + ~R$ 6,1 mi de passivo tributário | Exposição a glosa e autuação |
+| Dupla cobrança / churn | Contas não pagas por falta de caixa | Evasão da base |
+| **Custo da fundação (Solarium)** | **Sistema e time internos** | **~R$ 0 em licença** |
+
+> 🎯 **Mensagem para o comitê:** "Temos um cliff fiscal em agosto, custos operacionais classificados como administrativos, e um lucro de R$ 21 mi que não reproduzimos internamente. A fundação que organiza isso e nos põe em conformidade custa licença zero. A contratação do ERP decidimos no gate, quando o orçamento justificar."
+
+---
+
+## 🏗️ 6. A solução: arquitetura composta
+
+Arquitetura composta, não monólito. Três sistemas com papéis rígidos e **uma única espinha de identidade** — o Solarium — para que cliente, UC, usina, contrato e fatura nunca existam com IDs diferentes em quatro lugares.
+
+| Camada | Sistema | Responsabilidade | Fonte de verdade |
+|---|---|---|---|
+| Master Data Management (espinha) | **Solarium** | Reconcilia identidades entre os sistemas; absorve a complexidade regulatória da GD; centraliza a única fonte da verdade | **Identidade / golden record** |
+| System of Record | **NetSuite OneWorld** | Financeiro, contábil, AP/AR, projetos, consolidação, intercompany | **Financeira** |
+| System of Engagement | **Bitrix24** | Marketing, vendas, atendimento, funil, afiliados e partners | **Comercial** |
+| Energy Core | **Solarium + Energy Club** | Elegibilidade, conta de luz, cofrinho de energia, relação com concessionária, experiência do cliente | Setorial / produto |
+
+**Fluxo mestre:** lead no Bitrix24 → identidade reconciliada no Solarium → registro financeiro no NetSuite → status financeiro de volta ao Bitrix24 e ao BI.
+
+**Regra de ouro:** cada dado tem um dono. O Solarium é a autoridade de identidade; NetSuite e Bitrix24 são donos das suas transações. Sem essa decisão escrita, reconstroem-se os silos com logos mais bonitos.
+
+---
+
+## 🧩 7. O split do projeto: frentes e gates
+
+### 7.1. Frentes (em paralelo, sob um único PMO)
+
+| Frente | Escopo | Etapas | Status |
+|---|---|---|---|
+| **A — Dados e MDM (Solarium)** | Fundação de dados, custo ~R$ 0 | Estancar entrada → migrar histórico → golden record → dashboards com lead time | Começar já |
+| **B — ERP (NetSuite)** | Registro financeiro da holding | RFP com 6 cenários → POC com dados reais → foundation → contratação | Paralelo · gate de orçamento |
+| **C — Front-office (Bitrix24)** | Estabilização do CRM | Estabilizar pipeline → IDs mestres → integração Solarium/ERP | Paralelo |
+| **D — Governança e pessoas (PMO)** | Condução do programa | Business case → matriz de risco → gestão de mudança → KPIs por onda | Contínuo · começar já |
+
+### 7.2. Gates de decisão
+
+| Gate | Critério de liberação |
+|---|---|
+| **G0** (próximo) | Business case aprovado pelo CFO |
+| **G1** | RFP e POC do ERP validados com dados reais anonimizados |
+| **G2** | Planilhas paralelas oficialmente desligadas |
+| **G3** | Contratação do ERP — atrelada à disponibilidade de orçamento |
+| **G4** | Camada executiva e BSC homologados |
+
+---
+
+## 🗄️ 8. Governança de dados e MDM
+
+- **Donos de dado (data stewards) por domínio:** Financeiro (boletos e contas a receber), Compras (fornecedores e contas a pagar), Comercial (contratos e funil), Engenharia (energia conectada e usinas), Marketing (mídia e CAC), RH (colaboradores). O detalhamento dos campos será feito em varredura de requisitos com cada dono de área.
+- **Arbitragem de divergência (escalada única):** a equipe de MDM resolve o golden record no operacional; o **CFO é o desempate final** em conflito financeiro.
+- **Definição de dado válido:** vale somente o que está na plataforma — nenhuma fonte paralela. Mas "válido" exige regra por campo, não só presença na base (ex.: CPF tem que ser CPF válido; UC tem que bater com o formato da distribuidora; valor não pode ser negativo). *Está na base + passou na regra do campo = válido.*
+- **Estratégia de migração (estancar, depois backfill):** novos registros entram exclusivamente pela plataforma; o histórico é trazido depois.
+
+**Checklist de migração:**
+
+- [ ] Definir a data de corte (a TI sinaliza quando a ferramenta entra em uso)
+- [ ] A partir do corte, novo dado só entra pela plataforma (API ou interface; carga em massa por planilha ou item a item)
+- [ ] Backfill priorizando clientes ativos/recentes primeiro
+- [ ] Regras de validação por campo definidas antes do backfill
+- [ ] Reconciliação pós-migração contra a base de origem
+- [ ] Data de desligamento das planilhas paralelas (Gate G2)
+
+---
+
+## 🔄 9. Gestão de mudança e adoção
+
+O input por API/interface resolve o "como", não o "se". O risco nº 1 de projetos de dados é a **planilha-sombra**: a área manter o Excel paralelo "por garantia", de modo que o MDM nunca vira fonte única de fato.
+
+- **Vender o porquê:** narrativa clara de por que a mudança acontece e o que ela protege.
+- **Simplificar o dia a dia:** demonstrar que o processo de cada área fica mais simples — confiança vem de utilidade.
+- **Champions por área:** um responsável por área que apoia a adoção e tira dúvidas.
+- **Desligar a planilha:** uma data oficial (G2) em que a planilha paralela é descontinuada e o número oficial passa a ser só o do Solarium.
+
+---
+
+## 📊 10. KPIs, critérios de aceite e tela de acompanhamento
+
+O programa terá uma **tela de acompanhamento em tempo real** com KPIs de projeto, frentes, gates e riscos vivos. A arquitetura completa de KPIs de negócio (BSC) é entrega da Onda 4; o que precisa existir desde o dia 1 são **critérios de aceite por onda** — o gatilho de liberação de cada tranche de orçamento.
+
+| Onda / frente | Critério de "pronto" (exemplo) |
+|---|---|
+| Frente A — quick win | Os 35 clientes sem boleto quantificados e categorizados por causa |
+| Onda 1 | % alvo de boletos conciliados automaticamente + régua de cobrança ativa + emissão de NF automatizada antes de agosto |
+| Onda 2 | Zero planilhas paralelas em Financeiro e TI; golden record ativo |
+| Onda 3 | Ciclo lead → contrato → faturamento → comissão rastreável de ponta a ponta |
+| Onda 4 | Painéis do BSC homologados pela diretoria |
+
+---
+
+## ⚖️ 11. Matriz de riscos de implantação
+
+| Risco | Prob. | Impacto | Mitigação |
+|---|---|---|---|
+| Não conformidade fiscal a partir de agosto (emissão de NF) | Alta | Muito alto | Priorizar casamento boleto-NF (Solarium) + motor fiscal; plano de emissão antes do prazo |
+| Três fontes de verdade sem golden record definido | Alta | Muito alto | Solarium como autoridade de identidade; demais donos das transações |
+| Contratar ERP antes de organizar dados e processos | Alta | Muito alto | Dicionário de dados, plano de contas, RACI e donos de dado antes do contrato |
+| Custos operacionais classificados como administrativos | Alta | Alto | Centro de custos e reclassificação CAPEX/OPEX por usina |
+| Números financeiros não reproduzidos internamente | Média | Muito alto | Reconciliação operacional no Solarium; validar com contabilidade/auditoria |
+| Planilha-sombra após o go-live | Média | Alto | Champions por área, narrativa do porquê e desligamento oficial (G2) |
+| Customização excessiva do ERP | Alta | Alto | Regra 80% best practice / 20% extensão |
+
+---
+
+## 💻 12. Seleção do ERP de mercado
+
+Avaliação executiva (estudo C-Level), ponderada por aderência ao modelo NewSun.
+
+| Posição | ERP | Score | Papel no processo |
+|---|---|---|---|
+| 1 | **Oracle NetSuite OneWorld** | 8.5 | Favorito — testar fiscal Brasil e integração com Bitrix24 |
+| 2 | Microsoft Dynamics 365 | 8.1 | Desafiante |
+| 3 | SAP S/4HANA Cloud Public | 8.4 | Benchmark premium (mais pesado para a maturidade atual) |
+| 4 | TOTVS Protheus | 7.5 | Benchmark defensivo Brasil |
+
+**Tensões a resolver antes do contrato:** fonte da verdade (Solarium = MDM; NetSuite = financeiro); orçamento (NetSuite é premium — contratar na hora certa); roadmap único sob um único PMO.
+
+**Critério inegociável dado o cliff de agosto:** demonstração fiscal Brasil com dados de teste (NF-e/NFS-e, Pix, boletos, CNAB) e prazo de implantação do motor fiscal compatível com a obrigação de emissão.
+
+---
+
+## 🛠️ 13. Camada técnica
+
+A engenharia já está especificada e é intocável — a consultoria a complementa com governança de implantação. As tabelas abaixo são o **contrato de dados**: cada campo tem um dono, e os campos conversam entre si por chaves comuns.
+
+### 13.1. Dicionário de dados em nível de campo
+
+Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "conversa" com outra tabela). A coluna "Alimenta / constrói" indica o que aquele campo ajuda a produzir.
+
+#### Clientes — responsável: Comercial (cadastro) · Financeiro (risco)
+
+| Campo | Tipo / chave | Responsável | Alimenta / constrói |
+|---|---|---|---|
+| `ID_Cliente` | UUID · PK | MDM | Identidade-raiz; conversa com Contratos, Faturamento, Logs |
+| `Tipo_Pessoa` | PF / PJ / Condomínio | Comercial | Segmentação e regra fiscal |
+| `Nome_Razao_Social` | texto | Comercial | Cadastro e NF |
+| `CPF_CNPJ` | texto · único | Comercial | NF, validação fiscal, bureau de crédito |
+| `Status_Risco` | enum | Financeiro | Régua de crédito e cobrança |
+| `Status_Cliente` | ativo / inadimplente / cancelado | SAC | Base ativa, churn |
+| `Anonimizado_LGPD` | booleano | TI / Compliance | Conformidade LGPD pós-churn |
+
+#### Unidades Consumidoras (Multi-UC) — responsável: Engenharia (técnico) · Fiscal (destino)
+
+| Campo | Tipo / chave | Responsável | Alimenta / constrói |
+|---|---|---|---|
+| `ID_Instalacao` | UUID · PK | Engenharia | Identidade da UC; conversa com Alocação, Cofrinho, Faturamento |
+| `ID_Cliente` | FK → Clientes | Engenharia | Liga a UC ao cliente |
+| `Codigo_UC_Concessionaria` | texto | Engenharia | Leitura RPA, faturamento |
+| `Tipo_Rede` | mono / bi / tri | Engenharia | Trava do custo de disponibilidade |
+| `Titularidade_Operacao` | NewSun / Mantida_Cliente | Comercial / Financeiro | Regra de faturamento e de pagamento da conta |
+| `CEP_Destino` · `Codigo_IBGE_Municipio` | texto | Fiscal | Princípio do destino (IBS/CBS) |
+| `Distribuidora` | texto | Engenharia | Roteamento da RPA |
+| `Status_UC` | ativa / em desalocação | Engenharia | Churn, usina backup |
+
+#### Contratos — responsável: Comercial · Jurídico (imutabilidade)
+
+| Campo | Tipo / chave | Responsável | Alimenta / constrói |
+|---|---|---|---|
+| `ID_Contrato` | UUID · PK | Comercial | Identidade do contrato |
+| `ID_Cliente` | FK → Clientes | Comercial | Vínculo do contrato |
+| `ID_Vendedor_Interno` · `ID_Partner` · `ID_Affiliator` | FK | Comercial | Motor de comissionamento |
+| `Status_Contrato` | em aprovação / ativo / encerrado | Comercial | Funil, faturamento |
+| `Valor_Contrato_Base` · `Tarifa_Assinatura_Fixa` · `Tarifa_kWh_Excedente` | decimal | Financeiro | Faturamento |
+| `Data_Assinatura_Digital` · `Versao_Contrato` | data / int | Jurídico | Imutabilidade SOX, aditivos |
+
+#### Usinas (EAM) — responsável: Engenharia · Financeiro (centro de custo)
+
+| Campo | Tipo / chave | Responsável | Alimenta / constrói |
+|---|---|---|---|
+| `ID_Usina` | UUID · PK | Engenharia | Identidade da usina |
+| `Enquadramento_Regulatorio` | GD I / II / III | Engenharia / Fiscal | Dedução de Fio B |
+| `Regra_Sobra_Excedente` | enum | Engenharia | Motor matemático de GD |
+| `Centro_Custo_ERP` | texto | Financeiro | CAPEX e crédito fiscal |
+| `Capacidade_kWp` · `Status_Operacional` | decimal / enum | Engenharia | Geração, usina backup |
+
+#### Alocação Usina × UC — responsável: Engenharia
+
+| Campo | Tipo / chave | Responsável | Alimenta / constrói |
+|---|---|---|---|
+| `ID_Alocacao` | UUID · PK | Engenharia | Rateio Multi-UC |
+| `ID_Usina` | FK → Usinas | Engenharia | Origem da energia |
+| `ID_Instalacao` | FK → UCs | Engenharia | Destino da energia |
+| `Percentual_Cota` | decimal | Engenharia | Cálculo de injeção |
+
+#### Conta Corrente de Energia (Cofrinho) — responsável: Solarium / Engenharia
+
+| Campo | Tipo / chave | Responsável | Alimenta / constrói |
+|---|---|---|---|
+| `ID_Lancamento` | UUID · PK | Solarium | Lançamento mensal |
+| `ID_Instalacao` | FK → UCs | Solarium | Saldo por UC |
+| `Mes_Referencia` | data | Solarium | Competência |
+| `Saldo_Anterior_kWh` · `Injecao_Usina_Mes_kWh` · `Consumo_Faturado_Mes_kWh` · `Saldo_Atual_Acumulado_kWh` | decimal | Solarium | Motor matemático, Energy Club |
+| `Data_Expiracao` | data | Solarium | Expiração de créditos (Lei 14.300) |
+
+#### Faturamento Fiscal / Boletos — responsável: Financeiro · Fiscal
+
+| Campo | Tipo / chave | Responsável | Alimenta / constrói |
+|---|---|---|---|
+| `ID_Fatura` | UUID · PK | Financeiro | Identidade da fatura |
+| `ID_Contrato` · `ID_Instalacao` | FK | Financeiro | Vínculo cliente/UC |
+| `Valor_Liquido_Energia` · `Valor_Imposto_IBS_CBS` | decimal | Fiscal | NF, split payment |
+| `Chave_Acesso_NF3e_SEFAZ` | texto | Fiscal | Casamento boleto-NF (trava do barramento) |
+| `Tag_Split_Payment_Banco` | texto | Fiscal | Repasse automático do imposto |
+| `Status_Pagamento` · `Data_Emissao` · `Data_Vencimento` · `Data_Liquidacao` | enum / data | Financeiro | Conciliação CNAB, régua de cobrança, BSC |
+
+#### Rede de Afiliados / Partners — responsável: Comercial
+
+| Campo | Tipo / chave | Responsável | Alimenta / constrói |
+|---|---|---|---|
+| `ID_Terceiro` | UUID · PK | Comercial | Identidade do terceiro |
+| `Perfil` | Affiliator / Partner | Comercial | Regra de comissão |
+| `Status_Selecao` | em avaliação / aprovado / bloqueado | Comercial | Onboarding de canal |
+| `Regra_Comissao` | texto | Financeiro | Contas a pagar de comissão |
+
+#### Colaboradores Internos — responsável: RH
+
+| Campo | Tipo / chave | Responsável | Alimenta / constrói |
+|---|---|---|---|
+| `ID_Funcionario` | UUID · PK | RH | Identidade do colaborador |
+| `Matricula_RH` · `Cargo` | texto | RH | Folha de pagamento |
+| `Regra_Bonus` | texto | RH | Bônus por assinatura (folha) |
+
+#### Logs de Auditoria — responsável: TI / Compliance
+
+| Campo | Tipo / chave | Responsável | Alimenta / constrói |
+|---|---|---|---|
+| `ID_Log` | UUID · PK | TI | Trilha de auditoria |
+| `Usuario` · `Timestamp` | texto / data | TI | Rastreabilidade SOX |
+| `Tabela` · `Dado_Antigo` · `Dado_Novo` | texto | TI | Imutabilidade e histórico |
+
+> 📌 **Nota de escopo.** As tabelas acima são as **entidades mestras** (master data). O modelo físico completo terá tabelas transacionais, fiscais e de log adicionais. A lista exaustiva de campos de cada tabela será fechada na varredura de requisitos com cada dono de área (Frente D), usando este dicionário como ponto de partida.
+
+### 13.2. Matriz de compliance (travas algorítmicas)
+
+- **Lei 14.300/2022 (GD):** custo de disponibilidade (30/50/100 kWh por tipo de rede); Fio B por enquadramento (GD I × GD II/III); trava de lote condicionada à injeção do crédito.
+- **Reforma Tributária (IVA Dual):** princípio do destino por UC; casamento boleto-NF (sem boleto/PIX sem a chave de acesso SEFAZ); split payment com segregação energia × imposto.
+- **SOX:** imutabilidade contratual após assinatura (aditivos com logs).
+- **LGPD:** hash irreversível (SHA-256) anonimiza nome/CPF após churn, preservando IDs para histórico fiscal.
+
+### 13.3. Regras de negócio e workflows (módulos core)
+
+1. **Onboarding, risco e aprovação** — lead vira pré-contrato em alçadas; validação via bureau; GED indexado ao contrato.
+2. **RPA e contingência de TI** — robôs leem consumo/impostos; autocura por faturamento por média se o robô falhar > 48h.
+3. **Motor matemático de GD (batch mensal)** — abate o cofrinho, respeita a trava de disponibilidade, calcula injeção por cota, deduz Fio B, aplica a regra da sobra.
+4. **Workflow financeiro e ERP** — regra de titularidade e motor de comissionamento (gatilho assinatura; gatilho liquidez).
+5. **Churn e usina backup** — desalocação calcula saldo do cofrinho e emite fatura final; backup redireciona cota em manutenção.
+6. **Engenharia fiscal e ERP** — casamento boleto-NF: Solarium ordena, ERP processa imposto pelo destino, transmite à SEFAZ e só então gera o boleto com tag de split payment.
+
+### 13.4. Infraestrutura (requisitos não-funcionais)
+
+- **Barramento / API Gateway** — comunicação assíncrona entre nuvens, CRM e ERP.
+- **Mensageria (Kafka/RabbitMQ)** — filas com retry e dead-letter queue.
+- **Contingência SEFAZ** — emissão offline (EPEC/RPS) garantida pelo ERP.
+
+### 13.5. Experiência do usuário (portais)
+
+- **Energy Club (cliente final):** visão dividida (custos da rede × energia com desconto), widget do cofrinho, gatilhos omnichannel.
+- **Partner & Affiliator Hub (B2B):** funil de leads, carteira ativa e gamificação da adimplência.
+
+### 13.6. Stack tecnológico
+
+| Componente | Papel | Peso |
+|---|---|---|
+| Solarium | Motor matemático e MDM | 40% |
+| NetSuite OneWorld + motor fiscal | Backoffice contábil, fiscal e tesouraria | 25% |
+| Bitrix24 | CRM e relacionamento comercial | 15% |
+| RPA / integrações | Captura de faturas e validação de bureaus | 10% |
+| Barramento, GED e BI | Ligação assíncrona, contratos e dashboards | 10% |
+
+---
+
+## 📈 14. Balanced Scorecard (4 perspectivas)
+
+- **Financeira:** inadimplência por safra; split payment monitor; previsão de saída de caixa.
+- **Processos internos:** geração × consumo; eficácia de rateio da GD; sucesso diário da ingestão RPA.
+- **Clientes:** SLA × dias de faturamento; churn por causa raiz.
+- **Aprendizado e crescimento:** health score da rede de indicação; LTV de partners; onboarding de usinas.
+
+---
+
+## 🗓️ 15. Cronograma por ondas
+
+| Onda | Prazo | Foco |
+|---|---|---|
+| Onda 1 — Fundação financeira e fiscal | 60 dias | Régua de cobrança, Manifestação do Destinatário, emissão de NF automatizada (prazo de agosto), titularidade |
+| Onda 2 — Governança de dados (MDM) | 90 dias | Solarium como fonte única, RPA, fim das planilhas |
+| Onda 3 — Integração do ecossistema | 90 dias | Bitrix24, motor de comissões, Energy Club |
+| Onda 4 — Inteligência executiva | 30 dias | Painéis de BI e KPIs do BSC |
+
+---
+
+## 🎯 16. Escopo da consultoria
+
+- Auxiliar o PMO na **capa de negócios (business case)** para o CFO.
+- Desenhar a **matriz de riscos de implantação** e o modelo de governança do **Comitê Diretor**.
+- Validar a **viabilidade do ERP** (NetSuite como favorito) adequada ao orçamento inicial.
+
+---
+
+## 📚 17. Glossário estratégico
+
+- **Vendedor interno (NewSun):** colaborador CLT/PJ; bônus na folha (RH) do ERP.
+- **Affiliator:** terceiro de indicação; comissão atrelada à assinatura (R$ 7 a R$ 9 por R$ 1.000).
+- **Partner (síndicos/administradoras):** captação em bloco; comissão recorrente quando a fatura fica "paga".
+- **MDM (Master Data Management):** camada que define e reconcilia o dado mestre.
+- **Golden record:** o registro autoritativo de uma entidade quando há divergência entre sistemas.
+
+---
+
+## 📎 18. Base, fontes e ressalvas
+
+- **Financeiro:** Balanço Patrimonial e DRE consolidados de 31/12/2025 (contabilidade externa); base interna de boletos; entrevistas com colaboradores internos.
+- **ERP:** estudo comparativo C-Level de seleção de ERP (favorito: NetSuite OneWorld).
+- **Mercado:** MIT Project NANDA, *The GenAI Divide: State of AI in Business 2025*.
+- **Ressalva:** os indicadores financeiros não foram auditados nem reproduzidos internamente e devem ser validados com a contabilidade e em auditoria independente antes de uso externo. Estimativas operacionais serão confirmadas na Frente A.
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.18/marked.min.js"></script>
+<script>
+  function showTab(id, btn){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+id).classList.add('active');
+    if(id==='doc') renderDoc();
+  }
+  function openProject(){ var p=document.getElementById('projeto'); p.classList.remove('collapsed'); p.scrollIntoView({behavior:'smooth'}); }
+
+  var check='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+
+  var TABELAS=[
+    {nm:'Clientes',tg:'quem é cada cliente',lede:'O cadastro único de cada cliente — a raiz de tudo que se conecta no sistema.',itens:['Cadastro único, sem duplicidade entre áreas','Análise de risco e crédito na entrada','Base para a régua de cobrança','Conformidade com a LGPD']},
+    {nm:'Unidades consumidoras',tg:'cada ponto de consumo',lede:'Cada unidade de consumo do cliente, com seus dados técnicos e fiscais.',itens:['Faturamento por unidade','Cálculo do desconto de energia','Controle da troca de titularidade','Roteiro de leitura das contas']},
+    {nm:'Contratos',tg:'o acordo com o cliente',lede:'O contrato que liga cliente, vendedor e parceiro — e define o que será cobrado.',itens:['Proposta e assinatura digital','Controle de reajuste e vigência','Base do cálculo de comissões','Histórico de versões e aditivos']},
+    {nm:'Usinas',tg:'de onde vem a energia',lede:'Cada usina geradora, sua capacidade e o quanto entrega para cada cliente.',itens:['Controle de geração de cada usina','Rateio da energia entre clientes','Centro de custo e controle de investimento','Plano de usina reserva (backup)']},
+    {nm:'Cofrinho de energia',tg:'o saldo do cliente',lede:'O saldo de energia acumulada de cada cliente, mês a mês.',itens:['Cálculo mensal de consumo e crédito','Saldo de energia de cada cliente','Transparência para o cliente no aplicativo','Controle de expiração de créditos']},
+    {nm:'Faturamento e notas',tg:'a cobrança e o fiscal',lede:'O coração financeiro: nota fiscal, boleto e a conciliação da receita.',itens:['Emissão automática de nota fiscal (prazo de agosto)','Geração de boleto e cobrança','Conciliação da receita com a contabilidade','Régua de cobrança e recuperação de inadimplência']},
+    {nm:'Afiliados e parceiros',tg:'a rede de captação',lede:'Quem traz e mantém clientes — afiliados, síndicos e parceiros.',itens:['Cadastro e aprovação de parceiros','Cálculo e pagamento de comissões','Portal e ranking do parceiro','Gamificação da adimplência']},
+    {nm:'Colaboradores',tg:'o time interno',lede:'A equipe interna e suas metas de venda.',itens:['Bônus de vendas na folha de pagamento','Controle de metas internas']},
+    {nm:'Registro e auditoria',tg:'a memória do sistema',lede:'A trilha de tudo que muda — segurança e confiança na informação.',itens:['Registro de toda alteração (quem, quando, o quê)','Conformidade e segurança da informação']}
+  ];
+
+  var DEVS=[
+    {cat:'Banco de dados',nm:'Clientes',tg:'identidade-raiz',lede:'Conecta contratos, faturas e cobrança. Sem ela, nenhuma outra tabela conversa.',campos:['ID_Cliente|pk','Tipo_Pessoa','Nome_Razao_Social','CPF_CNPJ','Status_Risco','Status_Cliente','Anonimizado_LGPD']},
+    {cat:'Banco de dados',nm:'Unidades consumidoras',tg:'pontos de consumo',lede:'Define onde a energia é consumida — base do faturamento e do imposto pelo destino (Reforma).',campos:['ID_Instalacao|pk','ID_Cliente|fk','Codigo_UC_Concessionaria','Tipo_Rede','Titularidade_Operacao','CEP_Destino','Codigo_IBGE_Municipio','Distribuidora','Status_UC']},
+    {cat:'Banco de dados',nm:'Contratos',tg:'o acordo',lede:'Liga cliente, vendedor e parceiro; é a origem do faturamento e das comissões.',campos:['ID_Contrato|pk','ID_Cliente|fk','ID_Vendedor_Interno|fk','ID_Partner|fk','ID_Affiliator|fk','Status_Contrato','Valor_Contrato_Base','Tarifa_Assinatura_Fixa','Tarifa_kWh_Excedente','Data_Assinatura_Digital','Versao_Contrato']},
+    {cat:'Banco de dados',nm:'Usinas',tg:'a geração',lede:'Fonte da energia e centro de custo — base do rateio e do crédito fiscal de CAPEX.',campos:['ID_Usina|pk','Enquadramento_Regulatorio','Regra_Sobra_Excedente','Centro_Custo_ERP','Capacidade_kWp','Status_Operacional']},
+    {cat:'Banco de dados',nm:'Alocação usina × UC',tg:'o rateio',lede:'Distribui a energia de cada usina entre as unidades (Multi-UC).',campos:['ID_Alocacao|pk','ID_Usina|fk','ID_Instalacao|fk','Percentual_Cota']},
+    {cat:'Banco de dados',nm:'Cofrinho de energia',tg:'o saldo',lede:'Saldo de energia do cliente; alimenta o cálculo mensal e a transparência no app.',campos:['ID_Lancamento|pk','ID_Instalacao|fk','Mes_Referencia','Saldo_Anterior_kWh','Injecao_Usina_Mes_kWh','Consumo_Faturado_Mes_kWh','Saldo_Atual_Acumulado_kWh','Data_Expiracao']},
+    {cat:'Banco de dados',nm:'Faturamento e boletos',tg:'o financeiro',lede:'Coração financeiro: NF, boleto, conciliação e cobrança. Crítico para o prazo de agosto.',campos:['ID_Fatura|pk','ID_Contrato|fk','ID_Instalacao|fk','Valor_Liquido_Energia','Valor_Imposto_IBS_CBS','Chave_Acesso_NF3e_SEFAZ','Tag_Split_Payment_Banco','Status_Pagamento','Data_Emissao','Data_Vencimento','Data_Liquidacao']},
+    {cat:'Banco de dados',nm:'Afiliados e parceiros',tg:'a rede',lede:'Rede de captação e regras de comissão auditáveis.',campos:['ID_Terceiro|pk','Perfil','Status_Selecao','Regra_Comissao']},
+    {cat:'Banco de dados',nm:'Colaboradores',tg:'o time interno',lede:'Liga a venda interna ao bônus na folha de pagamento.',campos:['ID_Funcionario|pk','Matricula_RH','Cargo','Regra_Bonus']},
+    {cat:'Banco de dados',nm:'Logs de auditoria',tg:'a memória',lede:'Trilha de auditoria (SOX): quem mudou o quê e quando.',campos:['ID_Log|pk','Usuario','Timestamp','Tabela','Dado_Antigo','Dado_Novo']},
+
+    {cat:'APIs',nm:'Coleta de boletos',tg:'status de pagamento',lede:'Sem ela não sabemos o que foi pago — destrava a conciliação e a régua de cobrança.',campos:['ID_Fatura','Status_Pagamento','Data_Liquidacao','Valor_Pago','Linha_Digitavel']},
+    {cat:'APIs',nm:'Coleta de faturas da concessionária',tg:'consumo real',lede:'Traz o consumo e os impostos para o cálculo da GD; com fallback por média se o portal cair.',campos:['Codigo_UC_Concessionaria','Consumo_kWh','Valor_Conta','Impostos','Data_Leitura','Data_Vencimento']},
+    {cat:'APIs',nm:'Bureaus de crédito',tg:'risco na entrada',lede:'Avalia o risco do cliente antes de emitir contrato e fatura.',campos:['CPF_CNPJ','Score','Restricoes','Data_Consulta']},
+    {cat:'APIs',nm:'SEFAZ (NF e manifestação)',tg:'fiscal',lede:'Emite a NF (prazo de agosto) e faz a Manifestação do Destinatário das notas de entrada.',campos:['Chave_Acesso','CFOP','CEP_Destino','Valor_Imposto_IBS_CBS','Status_Manifestacao']},
+    {cat:'APIs',nm:'Bancária (CNAB / Pix / split)',tg:'cobrança e repasse',lede:'Gera boleto/Pix, recebe o retorno bancário e separa o imposto no split payment.',campos:['Arquivo_CNAB','QRCode_Pix','Tag_Split_Payment','Status_Retorno']},
+    {cat:'APIs',nm:'Integração Bitrix24',tg:'comercial',lede:'Conecta o comercial à base: do lead ao contrato, e o status financeiro de volta.',campos:['ID_Lead','ID_Contrato','Status_Financeiro','Origem_Lead']},
+    {cat:'APIs',nm:'Integração ERP (NetSuite)',tg:'contábil',lede:'Envia os eventos financeiros limpos para o registro contábil oficial.',campos:['ID_Cliente','ID_Fatura','Centro_Custo','Lancamento_Contabil']},
+
+    {cat:'Motores e automações',nm:'Motor matemático de GD',tg:'cálculo mensal',lede:'Calcula, mês a mês, o consumo de cada cliente, abate do saldo e respeita as travas da Lei 14.300.',campos:['Saldo_Anterior_kWh','Injecao_Usina_Mes_kWh','Consumo_Faturado_Mes_kWh','Percentual_Cota','Fio_B','Trava_Disponibilidade']},
+    {cat:'Motores e automações',nm:'Casamento boleto-NF',tg:'trava fiscal',lede:'Nenhum boleto sai sem a nota autorizada pela SEFAZ. É o núcleo do compliance da Reforma.',campos:['Chave_Acesso_NF3e_SEFAZ','Tag_Split_Payment_Banco','Status_Emissao']},
+    {cat:'Motores e automações',nm:'Régua de cobrança',tg:'recuperar caixa',lede:'Aciona a cobrança automaticamente e recupera o R$ 1,4 milhão parado.',campos:['Data_Vencimento','Status_Pagamento','Dias_Atraso','Gatilho_Acionamento']},
+    {cat:'Motores e automações',nm:'Motor de comissionamento',tg:'comissões',lede:'Calcula e dispara comissões — só paga partner quando a fatura está liquidada.',campos:['Regra_Comissao','Gatilho_Assinatura','Gatilho_Liquidez','ID_Terceiro']},
+    {cat:'Motores e automações',nm:'RPA das concessionárias',tg:'robôs de leitura',lede:'Robôs que leem as faturas; se o portal cair mais de 48h, fatura pela média.',campos:['Codigo_UC_Concessionaria','Status_Robo','Fallback_Media','Data_Ultima_Leitura']}
+  ];
+
+  function mountExplorer(listId, detailId, data, mode){
+    var listEl=document.getElementById(listId), detEl=document.getElementById(detailId);
+    function detail(i){
+      var t=data[i];
+      var body;
+      if(mode==='proc'){
+        body='<div class="blbl">processos e documentos que vamos construir</div><ul>'+
+          t.itens.map(function(x){return '<li>'+check+'<span>'+x+'</span></li>';}).join('')+'</ul>';
+      } else {
+        var chips=t.campos.map(function(c){var p=c.split('|');var cls=p[1]==='pk'?' pk':'';return '<span class="field'+cls+'">'+p[0]+(p[1]==='pk'?' (PK)':p[1]==='fk'?' (FK)':'')+'</span>';}).join('');
+        body='<div class="blbl">campos a desenvolver</div><div class="fields">'+chips+'</div>';
+      }
+      var sub=mode==='proc'?('tabela · '+t.tg):(t.cat+' · '+t.tg);
+      detEl.innerHTML='<div class="dk">'+sub+'</div><h3>'+t.nm+'</h3><p class="lede">'+t.lede+'</p>'+body;
+      listEl.querySelectorAll('.xcard').forEach(function(c,j){c.classList.toggle('active', j===i);});
+    }
+    var lastCat=null;
+    data.forEach(function(t,i){
+      if(mode==='dev' && t.cat!==lastCat){
+        var lab=document.createElement('div'); lab.className='cat-label'; lab.textContent=t.cat; listEl.appendChild(lab); lastCat=t.cat;
+      }
+      var b=document.createElement('button'); b.type='button'; b.className='xcard'+(i===0?' active':'');
+      b.innerHTML='<span class="dot"></span><span><span class="nm">'+t.nm+'</span><br><span class="tg">'+t.tg+'</span></span>';
+      b.onclick=function(){detail(i);};
+      listEl.appendChild(b);
+    });
+    detail(0);
+  }
+  mountExplorer('tbl-list','tbl-detail',TABELAS,'proc');
+
+  function estDetail(i){
+    var t=DEVS[i];
+    var chips=t.campos.map(function(c){var p=c.split('|');var cls=p[1]==='pk'?' pk':'';return '<span class="field'+cls+'">'+p[0]+(p[1]==='pk'?' (PK)':p[1]==='fk'?' (FK)':'')+'</span>';}).join('');
+    document.getElementById('est-detail').innerHTML='<div class="dk">'+t.cat+' · '+t.tg+'</div><h3>'+t.nm+'</h3><p class="lede">'+t.lede+'</p><div class="blbl">campos a desenvolver</div><div class="fields">'+chips+'</div>';
+    document.querySelectorAll('#est-list .xcard').forEach(function(c){c.classList.toggle('active', +c.getAttribute('data-i')===i);});
+  }
+  function estCat(cat, btn){
+    document.querySelectorAll('#panel-estrutura .subtab').forEach(function(b){b.classList.remove('active');}); if(btn) btn.classList.add('active');
+    var listEl=document.getElementById('est-list'); listEl.innerHTML=''; var first=-1;
+    DEVS.forEach(function(t,i){
+      if(t.cat!==cat) return; if(first<0) first=i;
+      var b=document.createElement('button'); b.type='button'; b.className='xcard'; b.setAttribute('data-i',i);
+      b.innerHTML='<span class="dot"></span><span><span class="nm">'+t.nm+'</span><br><span class="tg">'+t.tg+'</span></span>';
+      b.onclick=function(){estDetail(i);}; listEl.appendChild(b);
+    });
+    if(first>=0) estDetail(first);
+  }
+  estCat('Banco de dados', document.querySelector('#panel-estrutura .subtab'));
+
+  var STATUSES=[{k:'aguardando',t:'Aguardando aprovação'},{k:'aprovado',t:'Aprovado'},{k:'construcao',t:'Em construção'},{k:'teste',t:'Em teste'},{k:'finalizado',t:'Finalizado'}];
+  var PLANO={
+    'Estrutura TI':[
+      {nome:'Levantamento de processos e diagnóstico',itens:[{n:'Mapeamento dos processos atuais',st:'finalizado'},{n:'Diagnóstico da causa raiz',st:'finalizado'}]},
+      {nome:'Modelagem de dados (tabelas mestras)',itens:[{n:'Clientes, unidades e contratos',st:'aprovado'},{n:'Usinas, alocação e cofrinho',st:'aprovado'},{n:'Faturamento, afiliados, colaboradores e logs',st:'aprovado'}]},
+      {nome:'Governança de dados e donos por área',itens:[{n:'Financeiro — boletos e contas a receber',st:'aguardando'},{n:'Comercial — contratos e funil',st:'aguardando'},{n:'Engenharia — energia e usinas',st:'aguardando'},{n:'Compras — fornecedores e contas a pagar',st:'aguardando'},{n:'Marketing — mídia e CAC',st:'aguardando'},{n:'RH — colaboradores',st:'aguardando'}]},
+      {nome:'Ambiente e base de dados do Solarium',itens:[{n:'Provisionar a infraestrutura',st:'aguardando'},{n:'Modelo relacional e segurança',st:'aguardando'}]},
+      {nome:'Interface de entrada e data de corte',itens:[{n:'Tela de cadastro e edição',st:'aguardando'},{n:'Carga em massa por planilha',st:'aguardando'},{n:'Definição da data de corte',st:'aguardando'}]},
+      {nome:'Desenvolvimento das APIs',itens:[{n:'Coleta de boletos',st:'aguardando'},{n:'Coleta de faturas da concessionária',st:'aguardando'},{n:'Bureaus de crédito',st:'aguardando'},{n:'SEFAZ — NF e manifestação',st:'aguardando'},{n:'Bancária — CNAB, Pix e split',st:'aguardando'},{n:'Integração Bitrix24',st:'aguardando'},{n:'Integração ERP',st:'aguardando'}]},
+      {nome:'Motores de cálculo e automação',itens:[{n:'Motor matemático de GD',st:'aguardando'},{n:'Casamento boleto-NF',st:'aguardando'},{n:'Régua de cobrança',st:'aguardando'},{n:'Motor de comissionamento',st:'aguardando'},{n:'RPA das concessionárias',st:'aguardando'}]},
+      {nome:'Migração do histórico (backfill)',itens:[{n:'Priorização de clientes ativos',st:'aguardando'},{n:'Reconciliação pós-migração',st:'aguardando'}]},
+      {nome:'Integração com Bitrix24 e ERP',itens:[{n:'Sincronização de leads e contratos',st:'aguardando'},{n:'Retorno de status financeiro',st:'aguardando'}]},
+      {nome:'Testes integrados e homologação',itens:[{n:'Testes de fluxo ponta a ponta',st:'aguardando'},{n:'Testes de carga',st:'aguardando'}]},
+      {nome:'Dashboards e BSC',itens:[{n:'Painéis operacionais',st:'aguardando'},{n:'Painéis executivos (BSC)',st:'aguardando'}]},
+      {nome:'Go-live e desligamento das planilhas',itens:[{n:'Virada de chave',st:'aguardando'},{n:'Desligamento das planilhas paralelas',st:'aguardando'}]}
+    ],
+    'Financeiro':[
+      {nome:'Business case e defesa ao CFO',itens:[{n:'Quantificação do custo da inação',st:'construcao'},{n:'One-pager e apresentação ao CFO',st:'aguardando'}]},
+      {nome:'Manifestação do Destinatário (SEFAZ)',risco:'risco fiscal',itens:[{n:'Configurar a manifestação automática',st:'aguardando'},{n:'Trava do contas a pagar até a manifestação',st:'aguardando'}]},
+      {nome:'Emissão automática de nota fiscal',risco:'risco fiscal',itens:[{n:'Motor fiscal (cálculo de impostos)',st:'aguardando'},{n:'Emissão no prazo de agosto',st:'aguardando'}]},
+      {nome:'Abertura de novo CNPJ',risco:'risco fiscal e trabalhista',itens:[{n:'Estruturação societária',st:'aguardando'},{n:'Isolamento do passivo',st:'aguardando'}]},
+      {nome:'Revisão da pejotização',risco:'risco fiscal e trabalhista',itens:[{n:'Levantamento dos contratos PJ',st:'aguardando'},{n:'Plano de adequação',st:'aguardando'}]},
+      {nome:'Reclassificação de custos',itens:[{n:'Centro de custo por usina',st:'aguardando'},{n:'Custo operacional × administrativo',st:'aguardando'}]},
+      {nome:'Régua de cobrança',itens:[{n:'Régua de acionamento',st:'aguardando'},{n:'Recuperação da inadimplência (R$ 1,4 mi)',st:'aguardando'}]},
+      {nome:'Conciliação de receita interna',itens:[{n:'Conciliação bancária (CNAB)',st:'aguardando'},{n:'Reprodução do número internamente',st:'aguardando'}]},
+      {nome:'Casamento boleto-NF e split payment',itens:[{n:'Trava boleto-NF',st:'aguardando'},{n:'Segregação do imposto (split)',st:'aguardando'}]},
+      {nome:'Análise de regime tributário',itens:[{n:'Apuração da margem real',st:'aguardando'},{n:'Simulação Presumido × Real',st:'aguardando'}]},
+      {nome:'Seleção e contratação do ERP',itens:[{n:'RFP com 6 cenários',st:'aguardando'},{n:'POC com dados reais',st:'aguardando'},{n:'Contratação no gate',st:'aguardando'}]}
+    ]
+  };
+  function stTitle(k){for(var i=0;i<STATUSES.length;i++){if(STATUSES[i].k===k)return STATUSES[i].t;}return k;}
+  function toggleStep(btn){btn.parentNode.classList.toggle('open');}
+  function cycleStatus(btn){var cur=btn.getAttribute('data-st'),idx=0;for(var i=0;i<STATUSES.length;i++){if(STATUSES[i].k===cur)idx=i;}var nx=STATUSES[(idx+1)%STATUSES.length];btn.setAttribute('data-st',nx.k);btn.className='status st-'+nx.k;btn.textContent=nx.t;updateAll();}
+  function updateAll(){
+    document.querySelectorAll('#plano-list .pstep').forEach(function(p){
+      var badges=p.querySelectorAll('.status'),done=0;
+      badges.forEach(function(b){if(b.getAttribute('data-st')==='finalizado')done++;});
+      var rt=p.querySelector('.roll-txt'); if(rt)rt.textContent=done+'/'+badges.length;
+      var rf=p.querySelector('.roll-fill'); if(rf)rf.style.width=(badges.length?Math.round(done/badges.length*100):0)+'%';
+    });
+    var all=document.querySelectorAll('#plano-list .status'),counts={aguardando:0,aprovado:0,construcao:0,teste:0,finalizado:0};
+    all.forEach(function(b){counts[b.getAttribute('data-st')]++;});
+    var total=all.length,pct=total?Math.round(counts.finalizado/total*100):0;
+    var ch=STATUSES.map(function(s){return '<span class="ps-count"><span class="d d-'+s.k+'"></span>'+s.t+' <b>'+counts[s.k]+'</b></span>';}).join('');
+    document.getElementById('plano-summary').innerHTML='<div class="ps-progress"><div class="ps-pctline"><span class="ps-pct">'+pct+'%</span><span class="ps-lbl">concluído · '+total+' processos</span></div><div class="ps-bar"><div class="ps-fill" style="width:'+pct+'%"></div></div></div><div class="ps-counts">'+ch+'</div>';
+  }
+  function planoCat(cat,btn){
+    document.querySelectorAll('#panel-plano .subtab').forEach(function(b){b.classList.remove('active');}); if(btn) btn.classList.add('active');
+    document.getElementById('plano-list').innerHTML=PLANO[cat].map(function(s,i){
+      var risk=s.risco?'<span class="risk-tag">'+s.risco+'</span>':'';
+      var n=(i<9?'0':'')+(i+1);
+      var subs=s.itens.map(function(it){return '<div class="substep"><span class="substep-nome">'+it.n+'</span><button class="status st-'+it.st+'" data-st="'+it.st+'" onclick="cycleStatus(this)">'+stTitle(it.st)+'</button></div>';}).join('');
+      return '<div class="pstep"><button class="pstep-head" onclick="toggleStep(this)"><span class="chev">\u25B6</span><span class="step-n">'+n+'</span><span class="pstep-nome">'+s.nome+risk+'</span><span class="pstep-roll"><span class="roll-txt"></span><span class="roll-bar"><span class="roll-fill"></span></span></span></button><div class="pstep-sub">'+subs+'</div></div>';
+    }).join('');
+    updateAll();
+  }
+  planoCat('Estrutura TI', document.querySelector('#panel-plano .subtab'));
+
+  function renderDoc(){
+    var el=document.getElementById('doc-render'); if(el.dataset.done) return;
+    var md=document.getElementById('doc-md').textContent;
+    try{
+      if(window.marked){ marked.setOptions({gfm:true,breaks:false}); el.innerHTML=(marked.parse?marked.parse(md):marked(md)); }
+      else { el.innerHTML='<pre style="white-space:pre-wrap;font-family:var(--mono);font-size:13px">'+md.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</pre>'; }
+    }catch(e){ el.innerHTML='<pre style="white-space:pre-wrap;font-family:var(--mono);font-size:13px">'+md.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</pre>'; }
+    el.dataset.done='1';
+  }
+  function downloadDoc(){
+    var md=document.getElementById('doc-md').textContent;
+    var blob=new Blob([md],{type:'text/markdown;charset=utf-8'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a'); a.href=url; a.download='Projeto_Solarium_Documento.md';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){URL.revokeObjectURL(url);},1500);
+  }
+
+  var MAP=[
+    {nm:'Bitrix24',role:'comercial',envia:['Lead qualificado e oportunidade','Contrato assinado','Dados do cliente e do parceiro'],recebe:['Status do contrato','Status financeiro (pago / inadimplente)','Comissões liberadas']},
+    {nm:'ERP NetSuite',role:'financeiro',envia:['Confirmação de pagamento','Conciliação bancária','Status contábil e de contas a pagar'],recebe:['Ordem de faturamento','Lançamentos e centro de custo','Dados de cliente e contrato']},
+    {nm:'Banco',role:'cobrança',envia:['Retorno de pagamento (CNAB)','Confirmação de liquidação'],recebe:['Boleto / Pix a emitir','Arquivo de remessa','Instrução de split payment']},
+    {nm:'SEFAZ',role:'fiscal',envia:['Chave de acesso da nota','Autorização de emissão','Eventos das notas de entrada'],recebe:['Pedido de emissão de NF','Manifestação do destinatário']},
+    {nm:'Concessionárias',role:'consumo',envia:['Consumo em kWh','Valor da conta e impostos','Datas de leitura e vencimento'],recebe:['Somente leitura automatizada (robôs)','Faturamento por média se cair > 48h']},
+    {nm:'Energy Club',role:'cliente',envia:['Solicitações e dúvidas','Pedidos de cancelamento'],recebe:['Saldo do cofrinho de energia','Fatura e transparência da economia']},
+    {nm:'Bureau',role:'crédito / risco',envia:['Score de crédito','Restrições e histórico'],recebe:['Consulta por CPF / CNPJ na entrada do cliente']}
+  ];
+  var MAP_CENTER={nm:'Solarium',role:'núcleo · fonte única',txt:'O Solarium recebe, reconcilia e orquestra tudo. Uma única identidade de cliente, contrato, unidade e usina passa a valer para a empresa inteira — é o fim das planilhas paralelas e dos números que não batem.'};
+  function selMap(i){
+    for(var k=0;k<7;k++){var n=document.getElementById('n'+k);var l=document.getElementById('ln'+k);if(n)n.classList.toggle('sel',k===i);if(l)l.classList.toggle('on',k===i);}
+    var c=document.querySelector('.map-center'); if(c)c.classList.toggle('sel',i===-1);
+    var d=document.getElementById('map-detail');
+    if(i===-1){ d.innerHTML='<div class="dk">'+MAP_CENTER.role+'</div><h3>'+MAP_CENTER.nm+'</h3><p class="lede">'+MAP_CENTER.txt+'</p>'; return; }
+    var s=MAP[i];
+    var ev=s.envia.map(function(x){return '<li>'+x+'</li>';}).join('');
+    var re=s.recebe.map(function(x){return '<li>'+x+'</li>';}).join('');
+    d.innerHTML='<div class="dk">sistema · '+s.role+'</div><h3>'+s.nm+'</h3>'+
+      '<div class="flbl env">envia ao Solarium</div><ul class="flist">'+ev+'</ul>'+
+      '<div class="flbl rec">recebe do Solarium</div><ul class="flist">'+re+'</ul>';
+  }
+  selMap(-1);
+  document.getElementById('projeto').classList.add('collapsed');
+</script>
+</body>
+</html>
