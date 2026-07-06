@@ -32,14 +32,13 @@
   @keyframes sunPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.16)}}
   @keyframes raySpin{to{transform:rotate(360deg)}}
   .hero-in{position:relative;z-index:2;padding:60px 0}
-  .logo{width:92px;height:92px;border-radius:18px;border:1px solid rgba(248,201,92,.45);display:block;margin-bottom:34px;animation:logoSpin 20s linear infinite}
-  @keyframes logoSpin{to{transform:rotate(360deg)}}
+  .logo{width:92px;height:92px;border-radius:18px;border:1px solid rgba(248,201,92,.45);display:block;margin-bottom:34px}
   .logo.is-corner{cursor:pointer;transition:filter .15s}
   .logo.is-corner:hover{filter:brightness(1.12)}
   .hero h1{font-family:var(--display);font-weight:500;font-size:clamp(36px,6vw,66px);line-height:1.02;letter-spacing:-.02em;max-width:16ch}
   .hero h1 em{font-style:italic;color:var(--gold-soft)}
   .hero h1 .word{display:inline-block}
-  @media(prefers-reduced-motion:reduce){.glow,.sun-rays,.sun-core,.logo{animation:none}}
+  @media(prefers-reduced-motion:reduce){.glow,.sun-rays,.sun-core{animation:none}}
   .hero p{font-size:clamp(16px,2.1vw,20px);color:var(--tx-navy-mut);max-width:58ch;margin-top:26px;line-height:1.6}
   .cta{display:inline-flex;align-items:center;gap:12px;margin-top:40px;background:var(--gold);color:#3A2602;font-family:var(--body);font-weight:500;font-size:17px;padding:15px 30px;border-radius:6px;border:none;cursor:pointer;transition:transform .15s,background .15s}
   .cta:hover,.cta:focus-visible{background:var(--gold-soft);transform:translateY(-1px)}
@@ -158,6 +157,7 @@
   .map-stat .v{font-family:var(--mono);font-weight:500;font-size:26px;color:var(--gold-soft)}
   .map-stat .l{font-size:13px;color:var(--tx-navy-mut);margin-top:3px}
   .map-grid{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start}
+  .map-grow{position:fixed;z-index:150;pointer-events:none;box-shadow:0 20px 45px rgba(19,35,79,.35);overflow:hidden}
   .map-canvas{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:10px}
   .map-svg{display:block}
   .mline{stroke:var(--line-navy);stroke-width:1.4;transition:stroke .2s,stroke-width .2s,opacity .2s}
@@ -1015,7 +1015,6 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
     var hero=document.querySelector('.hero'), logo=document.getElementById('heroLogo'), main=document.getElementById('projeto');
     if(!window.gsap){ main.classList.remove('collapsed'); main.scrollIntoView({behavior:'smooth'}); return; }
     var rect=logo.getBoundingClientRect();
-    logo.style.animation='none';
     logo.style.position='fixed'; logo.style.margin='0'; logo.style.zIndex='200';
     logo.style.top=rect.top+'px'; logo.style.left=rect.left+'px'; logo.style.width=rect.width+'px'; logo.style.height=rect.height+'px';
     document.body.appendChild(logo);
@@ -1048,7 +1047,7 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
       .to(logo,{top:natRect.top,left:natRect.left,width:natRect.width,height:natRect.height,borderRadius:18,duration:.6,ease:'power3.inOut'},'-=.1')
       .to(hero,{opacity:1,scale:1,duration:.5},'-=.35')
       .add(function(){
-        logo.style.position=''; logo.style.top=''; logo.style.left=''; logo.style.width=''; logo.style.height=''; logo.style.margin=''; logo.style.zIndex=''; logo.style.borderRadius=''; logo.style.animation='';
+        logo.style.position=''; logo.style.top=''; logo.style.left=''; logo.style.width=''; logo.style.height=''; logo.style.margin=''; logo.style.zIndex=''; logo.style.borderRadius='';
         window.scrollTo(0,0);
       });
   }
@@ -1307,6 +1306,15 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
       if(line){ line.style.stroke=MAP_COLORS[k]; line.style.opacity='.55'; }
     }
   })();
+  function mapDetailHtml(i){
+    if(i===-1) return '<div class="dk">'+MAP_CENTER.role+'</div><h3>'+MAP_CENTER.nm+'</h3><p class="lede">'+MAP_CENTER.txt+'</p>';
+    var s=MAP[i];
+    var ev=s.envia.map(function(x){return '<li>'+x+'</li>';}).join('');
+    var re=s.recebe.map(function(x){return '<li>'+x+'</li>';}).join('');
+    return '<div class="dk">sistema · '+s.role+'</div><h3>'+s.nm+'</h3>'+
+      '<div class="flbl env">envia ao Solarium</div><ul class="flist">'+ev+'</ul>'+
+      '<div class="flbl rec">recebe do Solarium</div><ul class="flist">'+re+'</ul>';
+  }
   function selMap(i){
     for(var k=0;k<10;k++){
       var n=document.getElementById('n'+k), l=document.getElementById('ln'+k), isOn=k===i;
@@ -1315,13 +1323,21 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
     }
     var c=document.querySelector('.map-center'); if(c)c.classList.toggle('sel',i===-1);
     var d=document.getElementById('map-detail');
-    if(i===-1){ d.innerHTML='<div class="dk">'+MAP_CENTER.role+'</div><h3>'+MAP_CENTER.nm+'</h3><p class="lede">'+MAP_CENTER.txt+'</p>'; return; }
-    var s=MAP[i];
-    var ev=s.envia.map(function(x){return '<li>'+x+'</li>';}).join('');
-    var re=s.recebe.map(function(x){return '<li>'+x+'</li>';}).join('');
-    d.innerHTML='<div class="dk">sistema · '+s.role+'</div><h3>'+s.nm+'</h3>'+
-      '<div class="flbl env">envia ao Solarium</div><ul class="flist">'+ev+'</ul>'+
-      '<div class="flbl rec">recebe do Solarium</div><ul class="flist">'+re+'</ul>';
+    var srcEl=i===-1?document.querySelector('.map-center'):document.getElementById('n'+i);
+    var oldGrow=document.querySelector('.map-grow'); if(oldGrow) oldGrow.remove();
+    if(!window.gsap || !srcEl || !d.offsetParent){ d.innerHTML=mapDetailHtml(i); return; }
+    var srcRect=srcEl.getBoundingClientRect(), dstRect=d.getBoundingClientRect();
+    var grow=document.createElement('div'); grow.className='map-grow';
+    grow.style.top=srcRect.top+'px'; grow.style.left=srcRect.left+'px'; grow.style.width=srcRect.width+'px'; grow.style.height=srcRect.height+'px';
+    grow.style.background=i===-1?'var(--gold)':MAP_COLORS[i];
+    grow.style.borderRadius='10px';
+    document.body.appendChild(grow);
+    gsap.set(d,{opacity:0});
+    gsap.to(grow,{top:dstRect.top,left:dstRect.left,width:dstRect.width,height:dstRect.height,background:'#13234F',borderRadius:14,duration:.5,ease:'power3.inOut',onComplete:function(){
+      d.innerHTML=mapDetailHtml(i);
+      gsap.fromTo(d,{opacity:0},{opacity:1,duration:.3});
+      grow.remove();
+    }});
   }
   selMap(-1);
   document.getElementById('projeto').classList.add('collapsed');
