@@ -157,7 +157,7 @@
   .map-stat .v{font-family:var(--mono);font-weight:500;font-size:26px;color:var(--gold-soft)}
   .map-stat .l{font-size:13px;color:var(--tx-navy-mut);margin-top:3px}
   .map-grid{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start}
-  .map-grow{position:fixed;z-index:150;pointer-events:none;box-shadow:0 20px 45px rgba(19,35,79,.35);overflow:hidden}
+  .grow-box{position:fixed;z-index:400;pointer-events:none;box-shadow:0 20px 45px rgba(19,35,79,.35);overflow:hidden;isolation:isolate;background:#13234F}
   .map-canvas{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:10px}
   .map-svg{display:block}
   .mline{stroke:var(--line-navy);stroke-width:1.4;transition:stroke .2s,stroke-width .2s,opacity .2s}
@@ -1098,9 +1098,26 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
     {cat:'Motores e automações',nm:'Comitê de aprovação CAPEX',tg:'gatekeepers',lede:'Dispara aprovações simultâneas (Engenharia, Financeiro, Jurídico, C-Level) para cada usina do funil de expansão no Bitrix24.',campos:['ID_Usina_Prospect|pk','Parecer_Engenharia','Valuation_Financeiro','Parecer_Juridico','Aprovacao_CLevel','Status_Comite']}
   ];
 
-  function mountExplorer(listId, detailId, data, mode){
+  function growToDetail(srcEl, detailEl, fillFn, opts){
+    opts=opts||{};
+    var old=document.querySelector('.grow-box'); if(old) old.remove();
+    if(!window.gsap || !srcEl || !detailEl.offsetParent){ fillFn(); return; }
+    var srcRect=srcEl.getBoundingClientRect(), dstRect=detailEl.getBoundingClientRect();
+    var grow=document.createElement('div'); grow.className='grow-box';
+    grow.style.top=srcRect.top+'px'; grow.style.left=srcRect.left+'px'; grow.style.width=srcRect.width+'px'; grow.style.height=srcRect.height+'px';
+    grow.style.borderRadius=(opts.startRadius||10)+'px';
+    document.body.appendChild(grow);
+    gsap.set(detailEl,{opacity:0});
+    if(opts.rot) gsap.set(grow,{rotation:opts.rot});
+    gsap.to(grow,{top:dstRect.top,left:dstRect.left,width:dstRect.width,height:dstRect.height,borderRadius:14,rotation:0,duration:opts.duration||.5,ease:opts.ease||'power3.inOut',onComplete:function(){
+      fillFn();
+      gsap.fromTo(detailEl,{opacity:0},{opacity:1,duration:.3});
+      grow.remove();
+    }});
+  }
+  function mountExplorer(listId, detailId, data, mode, growOpts){
     var listEl=document.getElementById(listId), detEl=document.getElementById(detailId);
-    function detail(i){
+    function detail(i, srcEl){
       var t=data[i];
       var body;
       if(mode==='proc'){
@@ -1111,7 +1128,9 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
         body='<div class="blbl">campos a desenvolver</div><div class="fields">'+chips+'</div>';
       }
       var sub=mode==='proc'?('tabela · '+t.tg):(t.cat+' · '+t.tg);
-      detEl.innerHTML='<div class="dk">'+sub+'</div><h3>'+t.nm+'</h3><p class="lede">'+t.lede+'</p>'+body;
+      growToDetail(srcEl, detEl, function(){
+        detEl.innerHTML='<div class="dk">'+sub+'</div><h3>'+t.nm+'</h3><p class="lede">'+t.lede+'</p>'+body;
+      }, growOpts);
       listEl.querySelectorAll('.xcard').forEach(function(c,j){c.classList.toggle('active', j===i);});
     }
     var lastCat=null;
@@ -1121,17 +1140,20 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
       }
       var b=document.createElement('button'); b.type='button'; b.className='xcard'+(i===0?' active':'');
       b.innerHTML='<span class="dot"></span><span><span class="nm">'+t.nm+'</span><br><span class="tg">'+t.tg+'</span></span>';
-      b.onclick=function(){detail(i);};
+      b.onclick=function(){detail(i,b);};
       listEl.appendChild(b);
     });
     detail(0);
   }
-  mountExplorer('tbl-list','tbl-detail',TABELAS,'proc');
+  mountExplorer('tbl-list','tbl-detail',TABELAS,'proc',{rot:5,ease:'back.out(1.6)'});
 
-  function estDetail(i){
+  function estDetail(i, srcEl){
     var t=DEVS[i];
     var chips=t.campos.map(function(c){var p=c.split('|');var cls=p[1]==='pk'?' pk':'';return '<span class="field'+cls+'">'+p[0]+(p[1]==='pk'?' (PK)':p[1]==='fk'?' (FK)':'')+'</span>';}).join('');
-    document.getElementById('est-detail').innerHTML='<div class="dk">'+t.cat+' · '+t.tg+'</div><h3>'+t.nm+'</h3><p class="lede">'+t.lede+'</p><div class="blbl">campos a desenvolver</div><div class="fields">'+chips+'</div>';
+    var detEl=document.getElementById('est-detail');
+    growToDetail(srcEl, detEl, function(){
+      detEl.innerHTML='<div class="dk">'+t.cat+' · '+t.tg+'</div><h3>'+t.nm+'</h3><p class="lede">'+t.lede+'</p><div class="blbl">campos a desenvolver</div><div class="fields">'+chips+'</div>';
+    }, {rot:-6,ease:'elastic.out(1,0.75)',duration:.65});
     document.querySelectorAll('#est-list .xcard').forEach(function(c){c.classList.toggle('active', +c.getAttribute('data-i')===i);});
   }
   function estCat(cat, btn){
@@ -1141,7 +1163,7 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
       if(t.cat!==cat) return; if(first<0) first=i;
       var b=document.createElement('button'); b.type='button'; b.className='xcard'; b.setAttribute('data-i',i);
       b.innerHTML='<span class="dot"></span><span><span class="nm">'+t.nm+'</span><br><span class="tg">'+t.tg+'</span></span>';
-      b.onclick=function(){estDetail(i);}; listEl.appendChild(b);
+      b.onclick=function(){estDetail(i,b);}; listEl.appendChild(b);
     });
     if(first>=0) estDetail(first);
   }
@@ -1324,20 +1346,7 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
     var c=document.querySelector('.map-center'); if(c)c.classList.toggle('sel',i===-1);
     var d=document.getElementById('map-detail');
     var srcEl=i===-1?document.querySelector('.map-center'):document.getElementById('n'+i);
-    var oldGrow=document.querySelector('.map-grow'); if(oldGrow) oldGrow.remove();
-    if(!window.gsap || !srcEl || !d.offsetParent){ d.innerHTML=mapDetailHtml(i); return; }
-    var srcRect=srcEl.getBoundingClientRect(), dstRect=d.getBoundingClientRect();
-    var grow=document.createElement('div'); grow.className='map-grow';
-    grow.style.top=srcRect.top+'px'; grow.style.left=srcRect.left+'px'; grow.style.width=srcRect.width+'px'; grow.style.height=srcRect.height+'px';
-    grow.style.background=i===-1?'var(--gold)':MAP_COLORS[i];
-    grow.style.borderRadius='10px';
-    document.body.appendChild(grow);
-    gsap.set(d,{opacity:0});
-    gsap.to(grow,{top:dstRect.top,left:dstRect.left,width:dstRect.width,height:dstRect.height,background:'#13234F',borderRadius:14,duration:.5,ease:'power3.inOut',onComplete:function(){
-      d.innerHTML=mapDetailHtml(i);
-      gsap.fromTo(d,{opacity:0},{opacity:1,duration:.3});
-      grow.remove();
-    }});
+    growToDetail(srcEl, d, function(){ d.innerHTML=mapDetailHtml(i); });
   }
   selMap(-1);
   document.getElementById('projeto').classList.add('collapsed');
