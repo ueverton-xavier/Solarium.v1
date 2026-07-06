@@ -1328,6 +1328,24 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
       if(line){ line.style.stroke=MAP_COLORS[k]; line.style.opacity='.55'; }
     }
   })();
+  (function trimMapLines(){
+    var sx0=340, sy0=260, margin=12;
+    for(var k=0;k<10;k++){
+      var line=document.getElementById('ln'+k), rect=document.querySelector('#n'+k+' .mnode-rect');
+      if(!line||!rect) continue;
+      var rx=parseFloat(rect.getAttribute('x')), ry=parseFloat(rect.getAttribute('y'));
+      var rw=parseFloat(rect.getAttribute('width')), rh=parseFloat(rect.getAttribute('height'));
+      var cx=rx+rw/2, cy=ry+rh/2;
+      var sx=sx0-cx, sy=sy0-cy;
+      var hw=rw/2, hh=rh/2;
+      var tx=sx!==0?hw/Math.abs(sx):Infinity, ty=sy!==0?hh/Math.abs(sy):Infinity;
+      var t=Math.min(tx,ty);
+      var bx=cx+t*sx, by=cy+t*sy;
+      var mag=Math.sqrt(sx*sx+sy*sy)||1, ux=sx/mag, uy=sy/mag;
+      line.setAttribute('x2',(bx-margin*ux).toFixed(1));
+      line.setAttribute('y2',(by-margin*uy).toFixed(1));
+    }
+  })();
   function mapDetailHtml(i){
     if(i===-1) return '<div class="dk">'+MAP_CENTER.role+'</div><h3>'+MAP_CENTER.nm+'</h3><p class="lede">'+MAP_CENTER.txt+'</p>';
     var s=MAP[i];
