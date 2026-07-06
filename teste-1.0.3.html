@@ -1001,11 +1001,17 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
   }
 </script>
 <script>
+  function revealBlocks(panel, dur, stag){
+    if(!window.gsap || !panel) return;
+    gsap.fromTo(panel.children,{opacity:0,y:16},{opacity:1,y:0,duration:dur||.3,stagger:stag||.05,ease:'power2.out'});
+  }
   function showTab(id, btn){
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById('panel-'+id).classList.add('active');
+    var panel=document.getElementById('panel-'+id);
+    panel.classList.add('active');
+    revealBlocks(panel);
   }
   function handleLogoClick(){
     var logo=document.getElementById('heroLogo');
@@ -1020,14 +1026,12 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
     document.body.appendChild(logo);
     main.classList.remove('collapsed');
     gsap.set(main,{opacity:0});
-    var blocks=document.querySelectorAll('#panel-proj > *');
-    gsap.set(blocks,{opacity:0,y:22});
     var tl=gsap.timeline();
-    tl.to(hero,{opacity:0,scale:1.04,duration:.5,ease:'power2.inOut'})
+    tl.to(hero,{opacity:0,scale:1.04,duration:.25,ease:'power2.inOut'})
       .add(function(){hero.style.display='none'; window.scrollTo(0,0);})
-      .to(logo,{top:16,left:26,width:44,height:44,borderRadius:10,duration:.6,ease:'power3.inOut',onComplete:function(){logo.classList.add('is-corner');}},'-=.15')
-      .to(main,{opacity:1,duration:.3},'-=.3')
-      .to(blocks,{opacity:1,y:0,duration:.5,stagger:.08,ease:'power2.out'},'-=.1');
+      .to(logo,{top:16,left:26,width:44,height:44,borderRadius:10,duration:.35,ease:'power3.inOut',onComplete:function(){logo.classList.add('is-corner');}},'-=.12')
+      .to(main,{opacity:1,duration:.18},'-=.15')
+      .add(function(){ revealBlocks(document.getElementById('panel-proj'),.3,.05); },'-=.1');
   }
   function closeProject(){
     var hero=document.querySelector('.hero'), logo=document.getElementById('heroLogo'), main=document.getElementById('projeto');
@@ -1109,9 +1113,9 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
     document.body.appendChild(grow);
     gsap.set(detailEl,{opacity:0});
     if(opts.rot) gsap.set(grow,{rotation:opts.rot});
-    gsap.to(grow,{top:dstRect.top,left:dstRect.left,width:dstRect.width,height:dstRect.height,borderRadius:14,rotation:0,duration:opts.duration||.5,ease:opts.ease||'power3.inOut',onComplete:function(){
+    gsap.to(grow,{top:dstRect.top,left:dstRect.left,width:dstRect.width,height:dstRect.height,borderRadius:14,rotation:0,duration:opts.duration||.3,ease:opts.ease||'power3.inOut',onComplete:function(){
       fillFn();
-      gsap.fromTo(detailEl,{opacity:0},{opacity:1,duration:.3});
+      gsap.fromTo(detailEl,{opacity:0},{opacity:1,duration:.2});
       grow.remove();
     }});
   }
@@ -1153,7 +1157,7 @@ Convenção: **PK** = chave primária · **FK** = chave estrangeira (campo que "
     var detEl=document.getElementById('est-detail');
     growToDetail(srcEl, detEl, function(){
       detEl.innerHTML='<div class="dk">'+t.cat+' · '+t.tg+'</div><h3>'+t.nm+'</h3><p class="lede">'+t.lede+'</p><div class="blbl">campos a desenvolver</div><div class="fields">'+chips+'</div>';
-    }, {rot:-6,ease:'elastic.out(1,0.75)',duration:.65});
+    }, {rot:-6,ease:'elastic.out(1,0.75)',duration:.4});
     document.querySelectorAll('#est-list .xcard').forEach(function(c){c.classList.toggle('active', +c.getAttribute('data-i')===i);});
   }
   function estCat(cat, btn){
